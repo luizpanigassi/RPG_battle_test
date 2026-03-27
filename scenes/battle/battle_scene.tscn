@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://dk2nhtpqe0yyx"]
+
+[ext_resource type="Script" uid="uid://fsexy4gcub0k" path="res://scripts/actions/combat_manager.gd" id="1_ugm31"]
+[ext_resource type="PackedScene" uid="uid://mww3mvqcra6c" path="res://scenes/entities/player.tscn" id="2_o3k7m"]
+[ext_resource type="PackedScene" uid="uid://p8vqswfr8i72" path="res://scenes/entities/enemy.tscn" id="3_lbt8a"]
+[ext_resource type="PackedScene" uid="uid://og465bebxo4g" path="res://ui/battle_ui.tscn" id="4_cywj5"]
+
+[node name="BattleScene" type="Node2D"]
+
+[node name="CombatManager" type="Node" parent="."]
+script = ExtResource("1_ugm31")
+
+[node name="Player" parent="." instance=ExtResource("2_o3k7m")]
+
+[node name="Enemy" parent="." instance=ExtResource("3_lbt8a")]
+
+[node name="BattleUi" parent="." instance=ExtResource("4_cywj5")]
