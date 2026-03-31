@@ -7,7 +7,62 @@ layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_fyysl")
 
-[node name="AttackButton" type="Button" parent="."]
-offset_right = 8.0
-offset_bottom = 8.0
-text = "Attack!"
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 460.0
+offset_bottom = 330.0
+
+[node name="TopBar" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="PlayerContainer" type="VBoxContainer" parent="MainContainer/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerNameLabel" type="Label" parent="MainContainer/TopBar/PlayerContainer"]
+layout_mode = 2
+
+[node name="PlayerHPBar" type="ProgressBar" parent="MainContainer/TopBar/PlayerContainer"]
+custom_minimum_size = Vector2(180, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+show_percentage = false
+
+[node name="EnemyContainer" type="VBoxContainer" parent="MainContainer/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnemyNameLabel" type="Label" parent="MainContainer/TopBar/EnemyContainer"]
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="EnemyHPBar" type="ProgressBar" parent="MainContainer/TopBar/EnemyContainer"]
+custom_minimum_size = Vector2(180, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+show_percentage = false
+
+[node name="BattleLog" type="RichTextLabel" parent="MainContainer"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="ActionPanel" type="Panel" parent="MainContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+
+[node name="ActionContainer" type="VBoxContainer" parent="MainContainer/ActionPanel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2

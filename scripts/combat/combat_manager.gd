@@ -10,9 +10,13 @@ var waiting_for_input = false
 
 func _ready():
 	print("Combat started!")
+	
+	await get_tree().process_frame
 
-	ui.attack_selected.connect(_on_attack_selected)
-
+	ui.action_selected.connect(_on_action_selected)
+	ui.set_actions(player.actions)
+	ui.update_hp(player, enemy)
+	
 	start_combat()
 
 func start_combat():
@@ -32,11 +36,13 @@ func player_turn():
 	print("Player's turn!")
 	waiting_for_input = true
 
-func _on_attack_selected():
+func _on_action_selected(action: Action):
 	if not waiting_for_input:
 		return
 	waiting_for_input = false
-	enemy.take_damage(player.attack)
+	action.execute(player, enemy)
+	ui.log("Player uses " + action.name + "!")
+	ui.update_hp(player, enemy)
 	end_turn()
 
 func enemy_turn():
@@ -44,6 +50,8 @@ func enemy_turn():
 	await get_tree().create_timer(1.0).timeout
 
 	player.take_damage(enemy.attack)
+	ui.log("Enemy attacks!")
+	ui.update_hp(player, enemy)
 	end_turn()
 
 func end_turn():

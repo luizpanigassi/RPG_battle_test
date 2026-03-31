@@ -12,7 +12,6 @@
 script = ExtResource("1_ugm31")
 
 [node name="Player" parent="." instance=ExtResource("2_o3k7m")]
-script = ExtResource("3_o3k7m")
 
 [node name="Enemy" parent="." instance=ExtResource("3_lbt8a")]
 script = ExtResource("3_o3k7m")
