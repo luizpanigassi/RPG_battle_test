@@ -9,7 +9,7 @@ var speed: int = 10
 
 var actions: Array[Action] = []
 
-func take_damage(amount: int):
+func take_damage(amount: int) -> int:
 	var damage = max(amount - defense, 1)
 	hp -= damage
 	
@@ -17,6 +17,8 @@ func take_damage(amount: int):
 
 	if hp <= 0:
 		die()
+	
+	return damage
 
 func die():
 	print(name + " died.")
