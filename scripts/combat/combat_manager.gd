@@ -11,6 +11,7 @@ var turn_queue: Array = []
 var player_party: Array = []
 var enemies: Array = []
 var current_turn_index := 0
+var pending_action: Action = null
 
 func _ready():
 	print("Combat started!")
@@ -18,17 +19,22 @@ func _ready():
 	await get_tree().process_frame
 
 	ui.action_selected.connect(_on_action_selected)
+	ui.target_selected.connect(_on_target_selected)
+	ui.back_pressed.connect(_on_back_pressed)
 	
 	ui.set_actions(player.actions)
-	ui.update_hp(player, enemy)
+	ui.update_hp(player, enemies)
 	
 	start_combat()
 
 func start_combat():
 	player_party = [player]
-	enemies = [Goblin.new()]
+	enemies = [Goblin.new(), Wolf.new(), Slime.new()]
+	
+	ui.setup_enemies(enemies)
 	
 	turn_queue.clear()
+	
 	for p in player_party:
 		turn_queue.append(p)
 	for e in enemies:
@@ -36,6 +42,9 @@ func start_combat():
 	
 	sort_turn_order()
 	current_turn_index = 0
+	
+	ui.update_hp(player, enemies)
+	
 	next_turn()
 	
 func sort_turn_order():
@@ -63,10 +72,9 @@ func _on_action_selected(action: Action):
 	if not waiting_for_input:
 		return
 	waiting_for_input = false
-	var damage = action.execute(player, enemy)
-	ui.log("Player uses " + action.name + " and deals " + str(damage) + " damage!")
-	ui.update_hp(player, enemy)
-	end_turn()
+	pending_action = action
+	
+	ui.start_target_selection(enemies)
 
 func enemy_turn(enemy_entity):
 	print(enemy_entity.name + "'s turn!")
@@ -80,7 +88,22 @@ func enemy_turn(enemy_entity):
 	
 	ui.log(enemy_entity.name + " attacks and deals " + str(damage) + " damage!")
 	
-	ui.update_hp(player, enemy)
+	cleanup_dead()
+	
+	ui.update_hp(player, enemies)
+	end_turn()
+	
+func _on_target_selected(target):
+	var damage = pending_action.execute(player, target)
+	
+	ui.log("Player uses " + pending_action.name + " on " + target.name + " and deals " + str(damage) + " damage!")
+	ui.update_hp(player, enemies)
+	
+	pending_action = null
+	
+	cleanup_dead()
+	ui.set_actions(player.actions)
+	
 	end_turn()
 
 func end_turn():
@@ -102,8 +125,20 @@ func is_combat_over() -> bool:
 	
 	return all_players_dead or all_enemies_dead
 
+func cleanup_dead():
+	for e in enemies.duplicate():
+		if e.hp <= 0:
+			enemies.erase(e)
+			turn_queue.erase(e)
+			ui.remove_enemy(e)
+
 func end_combat():
 	if player.hp <= 0:
 		print("Enemy wins!")
 	else:
 		print("Player wins!")
+
+func _on_back_pressed():
+	pending_action = null
+	waiting_for_input = true
+	ui.set_actions(player.actions)

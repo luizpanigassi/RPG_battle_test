@@ -33,20 +33,8 @@ size_flags_horizontal = 3
 value = 100.0
 show_percentage = false
 
-[node name="EnemyContainer" type="VBoxContainer" parent="MainContainer/TopBar"]
+[node name="EnemyContainer" type="VBoxContainer" parent="MainContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="EnemyNameLabel" type="Label" parent="MainContainer/TopBar/EnemyContainer"]
-layout_mode = 2
-horizontal_alignment = 2
-
-[node name="EnemyHPBar" type="ProgressBar" parent="MainContainer/TopBar/EnemyContainer"]
-custom_minimum_size = Vector2(180, 18)
-layout_mode = 2
-size_flags_horizontal = 3
-value = 100.0
-show_percentage = false
 
 [node name="BattleLog" type="RichTextLabel" parent="MainContainer"]
 custom_minimum_size = Vector2(0, 90)

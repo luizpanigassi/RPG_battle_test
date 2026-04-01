@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://dqcjirflopbp0"]
+
+[ext_resource type="Script" uid="uid://i8cu32t8yxbo" path="res://ui/enemy_panel.gd" id="1_1im8l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+bg_color = Color(0.12, 0.12, 0.12, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.28, 0.28, 0.28, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="EnemyPanel" type="PanelContainer"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+script = ExtResource("1_1im8l")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="EnemyNameLabel" type="Label" parent="Content"]
+layout_mode = 2
+
+[node name="EnemyHPBar" type="ProgressBar" parent="Content"]
+layout_mode = 2
+show_percentage = false
