@@ -79,7 +79,10 @@ func _on_action_selected(action: Action):
 	waiting_for_input = false
 	pending_action = action
 	
-	ui.start_target_selection(enemies)
+	if action.target_type == Action.TargetType.ENEMY:
+		ui.start_target_selection(enemies)
+	elif action.target_type == Action.TargetType.SELF:
+		_on_target_selected(player)
 
 func enemy_turn(enemy_entity):
 	print(enemy_entity.name + "'s turn!")
@@ -91,8 +94,15 @@ func enemy_turn(enemy_entity):
 	
 	var damage = action.execute(enemy_entity, target, self)
 	
-	ui.log(enemy_entity.name + " attacks and deals " + str(damage) + " damage!")
+	if damage > 0:
+		ui.log(enemy_entity.name + " attacks and deals " + str(damage) + " damage!")
+		
+	elif damage < 0:
+		ui.log(enemy_entity.name + " heals " + str(-damage) + " HP!")
 	
+	else:
+		ui.log(enemy_entity.name + " uses " + action.name + "!")
+		
 	cleanup_dead()
 	
 	ui.update_hp(player, enemies)
@@ -101,7 +111,15 @@ func enemy_turn(enemy_entity):
 func _on_target_selected(target):
 	var damage = pending_action.execute(player, target, self)
 	
-	ui.log("Player uses " + pending_action.name + " on " + target.name + " and deals " + str(damage) + " damage!")
+	if damage > 0:
+		ui.log("Player uses " + pending_action.name + " on " + target.name + " and deals " + str(damage) + " damage!")
+		
+	elif damage < 0:
+		ui.log("Player uses " + pending_action.name + " and heals " + str(-damage) + " HP!")
+		
+	else:
+		ui.log("Player uses " + pending_action.name + "!")
+		
 	ui.update_hp(player, enemies)
 	
 	pending_action = null
@@ -112,6 +130,13 @@ func _on_target_selected(target):
 	end_turn()
 
 func end_turn():
+	if turn_queue.is_empty():
+		end_combat()
+		return
+
+	if current_turn_index >= turn_queue.size():
+		current_turn_index = 0
+
 	var entity = turn_queue[current_turn_index]
 
 	process_status_end(entity)
@@ -124,6 +149,9 @@ func end_turn():
 	next_turn()
 
 func process_status_end(entity):
+	if entity.status_effects.is_empty():
+		return
+		
 	for effect in entity.status_effects.duplicate():
 		effect.on_turn_end(entity)
 		
@@ -132,7 +160,7 @@ func process_status_end(entity):
 		if effect.duration <= 0:
 			effect.on_expire(entity)
 			entity.status_effects.erase(effect)
-			ui.log(effect.name + " on " + entity.name + " wore off!")
+			ui.log(entity.name + " is no longer affected by " + effect.name + ".")
 
 func is_combat_over() -> bool:
 	var all_players_dead = true

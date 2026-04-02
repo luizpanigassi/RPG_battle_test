@@ -48,7 +48,8 @@ static func slow_strike():
 static func healing():
 	var skill = SkillAction.new()
 	skill.name = "Heal"
+	skill.target_type = Action.TargetType.SELF
 	
-	skill.effects = [heal(10)]
+	skill.effects = [heal(15)]
 	
 	return skill
