@@ -3,5 +3,5 @@ extends Resource
 
 var name: String = "Action"
 
-func execute(_user, _target):
+func execute(_user, _target, _combat = null):
 	pass

@@ -2,10 +2,8 @@ class_name CombatManager
 extends Node
 
 @onready var player = $"../Player"
-@onready var enemy = $"../Enemy"
 @onready var ui = $"../BattleUi"
 
-var is_player_turn = true
 var waiting_for_input = false
 var turn_queue: Array = []
 var player_party: Array = []
@@ -53,16 +51,23 @@ func sort_turn_order():
 		)
 
 func next_turn():
+	if turn_queue.is_empty():
+		return
 	if is_combat_over():
 		end_combat()
 		return
 	
 	var current_entity = turn_queue[current_turn_index]
 	
+	process_status_start(current_entity)
 	if current_entity == player:
 		player_turn()
 	else:
 		enemy_turn(current_entity)
+
+func process_status_start(entity):
+	for effect in entity.status_effects:
+		effect.on_turn_start(entity, self)
 
 func player_turn():
 	print("Player's turn!")
@@ -84,7 +89,7 @@ func enemy_turn(enemy_entity):
 	var action = decision["action"]
 	var target = decision["target"]
 	
-	var damage = action.execute(enemy_entity, target)
+	var damage = action.execute(enemy_entity, target, self)
 	
 	ui.log(enemy_entity.name + " attacks and deals " + str(damage) + " damage!")
 	
@@ -94,7 +99,7 @@ func enemy_turn(enemy_entity):
 	end_turn()
 	
 func _on_target_selected(target):
-	var damage = pending_action.execute(player, target)
+	var damage = pending_action.execute(player, target, self)
 	
 	ui.log("Player uses " + pending_action.name + " on " + target.name + " and deals " + str(damage) + " damage!")
 	ui.update_hp(player, enemies)
@@ -107,11 +112,27 @@ func _on_target_selected(target):
 	end_turn()
 
 func end_turn():
+	var entity = turn_queue[current_turn_index]
+
+	process_status_end(entity)
+
 	current_turn_index += 1
 	
 	if current_turn_index >= turn_queue.size():
 		current_turn_index = 0
+		
 	next_turn()
+
+func process_status_end(entity):
+	for effect in entity.status_effects.duplicate():
+		effect.on_turn_end(entity)
+		
+		effect.duration -= 1
+		
+		if effect.duration <= 0:
+			effect.on_expire(entity)
+			entity.status_effects.erase(effect)
+			ui.log(effect.name + " on " + entity.name + " wore off!")
 
 func is_combat_over() -> bool:
 	var all_players_dead = true

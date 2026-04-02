@@ -11,14 +11,9 @@ signal back_pressed
 @onready var enemy_container: VBoxContainer = $MainContainer/EnemyContainer
 
 var player_low_hp_tween: Tween
-var enemy_low_hp_tween: Tween
 var last_player_hp := -1
-var last_enemy_hp := -1
 var enemy_panels = {}
 var highlighted_enemy = null
-
-func _ready():
-	pass
 	
 func set_actions(actions: Array[Action]):
 	for panel in enemy_panels.values():
@@ -120,9 +115,9 @@ func update_hp(player, enemies):
 		
 	if player_ratio <= 0.2:
 		if player_low_hp_tween == null:
-			start_low_hp_pulse(player_hp_bar, "player")
+			start_low_hp_pulse(player_hp_bar)
 	else:
-		stop_low_hp_pulse(player_hp_bar, "player", player.hp, player.max_hp)
+		stop_low_hp_pulse(player_hp_bar, player.hp, player.max_hp)
 		
 	for e in enemies:
 		if enemy_panels.has(e):
@@ -150,27 +145,18 @@ func get_hp_color(current_hp: int, max_hp: int) -> Color:
 	else:
 		return Color(0.9, 0.2, 0.2) #vermelho
 		
-func start_low_hp_pulse(bar: ProgressBar, tween_ref_name: String):
+func start_low_hp_pulse(bar: ProgressBar):
 	var tween = create_tween()
 	tween.set_loops()
 	
 	tween.tween_property(bar, "modulate", Color(1, 0.4, 0.4), 0.4)
 	tween.tween_property(bar, "modulate", Color(0.9, 0.2, 0.2), 0.4)
-	
-	if tween_ref_name == "player":
-		player_low_hp_tween = tween
-	else:
-		enemy_low_hp_tween = tween
+
+	player_low_hp_tween = tween
 		
-func stop_low_hp_pulse(bar: ProgressBar, tween_ref_name: String, current_hp: int, max_hp: int):
-	var tween
-	
-	if tween_ref_name == "player":
-		tween = player_low_hp_tween
-		player_low_hp_tween = null
-	else:
-		tween = enemy_low_hp_tween
-		enemy_low_hp_tween = null
+func stop_low_hp_pulse(bar: ProgressBar, current_hp: int, max_hp: int):
+	var tween = player_low_hp_tween
+	player_low_hp_tween = null
 		
 	if tween:
 		tween.kill()
@@ -179,17 +165,6 @@ func stop_low_hp_pulse(bar: ProgressBar, tween_ref_name: String, current_hp: int
 
 func is_low_hp_active(bar: ProgressBar) -> bool:
 	return(bar == player_hp_bar and player_low_hp_tween != null)
-	
-func update_turn_order(queue: Array, current_index: int):
-	var text = "Turn order:\n"
-	
-	for i in range(queue.size()):
-		if i == current_index:
-			text += "👉"
-		text += queue[i].name + "\n"
-	
-	battle_log.clear()
-	battle_log.append_text(text)
 
 func remove_enemy(enemy):
 	if enemy_panels.has(enemy):
