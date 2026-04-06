@@ -1,8 +1,8 @@
 class_name CombatManager
 extends Node
 
-@onready var player = $"../Player"
-@onready var ui = $"../BattleUi"
+@onready var player = $"../CanvasLayer/Player"
+@onready var ui = $"../CanvasLayer/BattleUi"
 
 var waiting_for_input = false
 var turn_queue: Array = []
@@ -82,7 +82,7 @@ func _on_action_selected(action: Action):
 	if action.target_type == Action.TargetType.ENEMY:
 		ui.start_target_selection(enemies)
 	elif action.target_type == Action.TargetType.SELF:
-		_on_target_selected(player)
+		await _on_target_selected(player)
 
 func enemy_turn(enemy_entity):
 	print(enemy_entity.name + "'s turn!")
@@ -91,34 +91,33 @@ func enemy_turn(enemy_entity):
 	var decision = enemy_entity.choose_action(player_party)
 	var action = decision["action"]
 	var target = decision["target"]
+	ui.log_skill(enemy_entity, action)
 	
 	var damage = action.execute(enemy_entity, target, self)
 	
 	if damage > 0:
-		ui.log(enemy_entity.name + " attacks and deals " + str(damage) + " damage!")
+		ui.log_damage(target, damage)
+		if target == player:
+			await player.play_hurt_animation()
 		
 	elif damage < 0:
-		ui.log(enemy_entity.name + " heals " + str(-damage) + " HP!")
+		ui.log_heal(target, -damage)
 	
-	else:
-		ui.log(enemy_entity.name + " uses " + action.name + "!")
-		
 	cleanup_dead()
 	
 	ui.update_hp(player, enemies)
 	end_turn()
 	
 func _on_target_selected(target):
+	ui.log_skill(player, pending_action)
+	await player.play_attack_animation()
 	var damage = pending_action.execute(player, target, self)
 	
 	if damage > 0:
-		ui.log("Player uses " + pending_action.name + " on " + target.name + " and deals " + str(damage) + " damage!")
+		ui.log_damage(target, damage)
 		
 	elif damage < 0:
-		ui.log("Player uses " + pending_action.name + " and heals " + str(-damage) + " HP!")
-		
-	else:
-		ui.log("Player uses " + pending_action.name + "!")
+		ui.log_heal(target, -damage)
 		
 	ui.update_hp(player, enemies)
 	
@@ -160,7 +159,7 @@ func process_status_end(entity):
 		if effect.duration <= 0:
 			effect.on_expire(entity)
 			entity.status_effects.erase(effect)
-			ui.log(entity.name + " is no longer affected by " + effect.name + ".")
+			ui.log_status_end(entity, effect)
 
 func is_combat_over() -> bool:
 	var all_players_dead = true

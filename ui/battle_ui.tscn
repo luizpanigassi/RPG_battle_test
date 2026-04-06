@@ -1,56 +1,187 @@
-[gd_scene load_steps=2 format=3 uid="uid://og465bebxo4g"]
+[gd_scene load_steps=4 format=3 uid="uid://og465bebxo4g"]
 
 [ext_resource type="Script" uid="uid://drrtmsxbj5xir" path="res://ui/battle_ui.gd" id="1_fyysl"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frame"]
+content_margin_left = 14.0
+content_margin_top = 14.0
+content_margin_right = 14.0
+content_margin_bottom = 14.0
+bg_color = Color(0.06, 0.07, 0.09, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.22, 0.25, 0.3, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_log"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.08, 0.09, 0.11, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.24, 0.26, 0.31, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="BattleUi" type="Control"]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_fyysl")
 
-[node name="MainContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = 460.0
-offset_bottom = 330.0
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 2.0
+offset_right = 1.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.04, 0.05, 1)
 
-[node name="TopBar" type="HBoxContainer" parent="MainContainer"]
+[node name="MainContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = -24.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Layout" type="VBoxContainer" parent="MainContainer"]
+custom_minimum_size = Vector2(0, 240)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.15
 theme_override_constants/separation = 16
 
-[node name="PlayerContainer" type="VBoxContainer" parent="MainContainer/TopBar"]
+[node name="TopRow" type="HBoxContainer" parent="MainContainer/Layout"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
 
-[node name="PlayerNameLabel" type="Label" parent="MainContainer/TopBar/PlayerContainer"]
+[node name="PlayerPanel" type="PanelContainer" parent="MainContainer/Layout/TopRow"]
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
 
-[node name="PlayerHPBar" type="ProgressBar" parent="MainContainer/TopBar/PlayerContainer"]
+[node name="PlayerContainer" type="VBoxContainer" parent="MainContainer/Layout/TopRow/PlayerPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="PlayerHeader" type="Label" parent="MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.85, 0.9, 1)
+text = "PLAYER"
+
+[node name="PlayerNameLabel" type="Label" parent="MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.98, 1, 1)
+theme_override_font_sizes/font_size = 22
+
+[node name="PlayerHPBar" type="ProgressBar" parent="MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer"]
 custom_minimum_size = Vector2(180, 18)
 layout_mode = 2
 size_flags_horizontal = 3
 value = 100.0
 show_percentage = false
 
-[node name="EnemyContainer" type="VBoxContainer" parent="MainContainer"]
+[node name="EnemyPanel" type="PanelContainer" parent="MainContainer/Layout/TopRow"]
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
 
-[node name="BattleLog" type="RichTextLabel" parent="MainContainer"]
-custom_minimum_size = Vector2(0, 90)
+[node name="EnemyContainer" type="VBoxContainer" parent="MainContainer/Layout/TopRow/EnemyPanel"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
 
-[node name="ActionPanel" type="Panel" parent="MainContainer"]
-custom_minimum_size = Vector2(0, 150)
+[node name="EnemyHeader" type="Label" parent="MainContainer/Layout/TopRow/EnemyPanel/EnemyContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.85, 0.9, 1)
+text = "ENEMIES"
+horizontal_alignment = 2
 
-[node name="ActionContainer" type="VBoxContainer" parent="MainContainer/ActionPanel"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="BottomRow" type="HBoxContainer" parent="MainContainer/Layout"]
+custom_minimum_size = Vector2(0, 340)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="ActionPanel" type="PanelContainer" parent="MainContainer/Layout/BottomRow"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
+
+[node name="ActionColumn" type="VBoxContainer" parent="MainContainer/Layout/BottomRow/ActionPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="ActionHeader" type="Label" parent="MainContainer/Layout/BottomRow/ActionPanel/ActionColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.85, 0.9, 1)
+text = "ACTIONS"
+
+[node name="ActionContainer" type="VBoxContainer" parent="MainContainer/Layout/BottomRow/ActionPanel/ActionColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="LogPanel" type="PanelContainer" parent="MainContainer/Layout/BottomRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.5
+theme_override_styles/panel = SubResource("StyleBoxFlat_log")
+
+[node name="LogColumn" type="VBoxContainer" parent="MainContainer/Layout/BottomRow/LogPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="LogHeader" type="Label" parent="MainContainer/Layout/BottomRow/LogPanel/LogColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.85, 0.9, 1)
+text = "BATTLE LOG"
+
+[node name="BattleLog" type="RichTextLabel" parent="MainContainer/Layout/BottomRow/LogPanel/LogColumn"]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

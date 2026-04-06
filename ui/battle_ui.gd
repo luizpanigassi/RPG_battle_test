@@ -4,16 +4,23 @@ signal action_selected(action)
 signal target_selected(target)
 signal back_pressed
 
-@onready var player_hp_bar: ProgressBar = $MainContainer/TopBar/PlayerContainer/PlayerHPBar
-@onready var action_container: VBoxContainer = $MainContainer/ActionPanel/ActionContainer
-@onready var battle_log: RichTextLabel = $MainContainer/BattleLog
-@onready var player_name_label: Label = $MainContainer/TopBar/PlayerContainer/PlayerNameLabel
-@onready var enemy_container: VBoxContainer = $MainContainer/EnemyContainer
+@onready var player_hp_bar: ProgressBar = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerHPBar
+@onready var action_container: VBoxContainer = $MainContainer/Layout/BottomRow/ActionPanel/ActionColumn/ActionContainer
+@onready var battle_log: RichTextLabel = $MainContainer/Layout/BottomRow/LogPanel/LogColumn/BattleLog
+@onready var player_name_label: Label = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerNameLabel
+@onready var enemy_container: VBoxContainer = $MainContainer/Layout/TopRow/EnemyPanel/EnemyContainer
+
+const MAX_BATTLE_LOG_LINES := 10
 
 var player_low_hp_tween: Tween
 var last_player_hp := -1
 var enemy_panels = {}
 var highlighted_enemy = null
+var battle_log_lines: Array[String] = []
+
+func _ready():
+	battle_log.scroll_active = false
+	battle_log.bbcode_enabled = true
 	
 func set_actions(actions: Array[Action]):
 	for panel in enemy_panels.values():
@@ -133,9 +140,32 @@ func animate_bar(bar: ProgressBar, target_value: int, max_hp: int):
 		tween.parallel().tween_property(bar, "modulate", new_color, 0.25)
 
 func log(text: String):
-	battle_log.append_text(text + '\n')
-	battle_log.scroll_to_line(battle_log.get_line_count())
+	battle_log_lines.append(text)
+
+	while battle_log_lines.size() > MAX_BATTLE_LOG_LINES:
+		battle_log_lines.pop_front()
+
+	battle_log.clear()
+	battle_log.append_text("\n".join(battle_log_lines))
+
+func log_skill(user, skill):
+	self.log("[color=orange]🔥 " + user.name + " uses " + skill.name + "![/color]")
 	
+func log_damage(target, amount):
+	self.log("[color=red]💥 " + target.name + " takes " + str(amount) + " damage![/color]")
+	
+func log_heal(target, amount):
+	self.log("[color=green]💚 " + target.name + " recovers " + str(amount) + " HP![/color]")
+	
+func log_status(target, status):
+	self.log("[color=violet]☠ " + target.name + " is afflicted with " + status.name + "![/color]")
+
+func log_buff(target, status):
+	self.log("[color=skyblue]✨ " + target.name + " gains " + status.name + "![/color]")
+	
+func log_status_end(target, status):
+	self.log("[color=gray]✨ " + status.name + " on " + target.name + " wore off.[/color]")
+
 func get_hp_color(current_hp: int, max_hp: int) -> Color:
 	var ratio := float(current_hp) / float(max_hp)
 	if ratio > 0.5:

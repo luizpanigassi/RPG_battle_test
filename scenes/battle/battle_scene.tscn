@@ -10,8 +10,15 @@
 [node name="CombatManager" type="Node" parent="."]
 script = ExtResource("1_ugm31")
 
-[node name="Player" parent="." instance=ExtResource("2_o3k7m")]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Enemy" parent="." instance=ExtResource("3_lbt8a")]
+[node name="Player" parent="CanvasLayer" instance=ExtResource("2_o3k7m")]
+z_index = 2
+position = Vector2(144, 149)
+scale = Vector2(3.02643, 3.02643)
 
-[node name="BattleUi" parent="." instance=ExtResource("4_cywj5")]
+[node name="Enemy" parent="CanvasLayer" instance=ExtResource("3_lbt8a")]
+z_index = 1
+position = Vector2(711, 166)
+
+[node name="BattleUi" parent="CanvasLayer" instance=ExtResource("4_cywj5")]

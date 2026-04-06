@@ -3,6 +3,7 @@ extends Resource
 
 var name := "Status"
 var duration := 3
+var is_buff := false
 
 func on_apply(_target):
 	pass

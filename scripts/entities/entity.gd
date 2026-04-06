@@ -30,12 +30,14 @@ func apply_status(effect: StatusEffect, combat = null):
 	for e in status_effects:
 		if e.name == effect.name:
 			return
-	
-	print(name, " is affected by ", effect.name)
+
+	if combat != null and combat.ui != null:
+		if effect.is_buff:
+			combat.ui.log_buff(self, effect)
+		else:
+			combat.ui.log_status(self, effect)
 	status_effects.append(effect)
 	effect.on_apply(self)
-	if combat != null and combat.ui != null:
-		combat.ui.log(name + " is afflicted with " + effect.name + "!")
 
 func die():
 	print(name + " died.")

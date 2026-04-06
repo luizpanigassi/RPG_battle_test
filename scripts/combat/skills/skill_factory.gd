@@ -53,3 +53,12 @@ static func healing():
 	skill.effects = [heal(15)]
 	
 	return skill
+
+static func regen():
+	var skill = SkillAction.new()
+	skill.name = "Regen"
+	skill.target_type = Action.TargetType.SELF
+	
+	skill.effects = [status(Regen)]
+	
+	return skill
