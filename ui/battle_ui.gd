@@ -8,7 +8,7 @@ signal back_pressed
 @onready var action_container: VBoxContainer = $MainContainer/Layout/BottomRow/ActionPanel/ActionColumn/ActionContainer
 @onready var battle_log: RichTextLabel = $MainContainer/Layout/BottomRow/LogPanel/LogColumn/BattleLog
 @onready var player_name_label: Label = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerNameLabel
-@onready var enemy_container: VBoxContainer = $MainContainer/Layout/TopRow/EnemyPanel/EnemyContainer
+@onready var enemy_container: HBoxContainer = $MainContainer/Layout/TopRow/EnemyPanel/EnemyPanelContent/EnemyContainer
 
 const MAX_BATTLE_LOG_LINES := 10
 
@@ -106,9 +106,30 @@ func setup_enemies(enemies: Array):
 	
 	for e in enemies:
 		var panel = panel_scene.instantiate()
+		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		enemy_container.add_child(panel)
 		panel.setup(e)
 		enemy_panels[e] = panel
+
+func get_enemy_slot_positions(count: int) -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+	if count <= 0:
+		return positions
+
+	var width := enemy_container.size.x
+	if width <= 0.0:
+		width = enemy_container.get_combined_minimum_size().x
+	if width <= 0.0:
+		width = 480.0
+
+	var step := width / float(count)
+	var y := enemy_container.global_position.y + enemy_container.size.y + 18.0
+
+	for i in count:
+		var x := enemy_container.global_position.x + step * (float(i) + 0.5)
+		positions.append(Vector2(x, y))
+
+	return positions
 		
 func update_hp(player, enemies):
 	player_hp_bar.max_value = player.max_hp

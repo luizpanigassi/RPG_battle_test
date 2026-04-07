@@ -1,9 +1,9 @@
 [gd_scene load_steps=27 format=3 uid="uid://mww3mvqcra6c"]
 
 [ext_resource type="Script" uid="uid://bmbtihta7m53s" path="res://scripts/entities/player_party/player.gd" id="1_ucweq"]
-[ext_resource type="Texture2D" uid="uid://ckqqgy3x3agh1" path="res://assets/sprites/player_attack.png" id="2_42nxq"]
-[ext_resource type="Texture2D" uid="uid://bfn3be7q3j6og" path="res://assets/sprites/player_hurt.png" id="3_5u6hq"]
-[ext_resource type="Texture2D" uid="uid://ds7u6o8vflurq" path="res://assets/sprites/player_idle.png" id="4_d4qa6"]
+[ext_resource type="Texture2D" uid="uid://487e5gal4cm0" path="res://assets/sprites/player_attack.png" id="2_42nxq"]
+[ext_resource type="Texture2D" uid="uid://bkjmnvp1anmd1" path="res://assets/sprites/player_hurt.png" id="3_5u6hq"]
+[ext_resource type="Texture2D" uid="uid://jiaoxw4jqhue" path="res://assets/sprites/player_idle.png" id="4_d4qa6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ss7kx"]
 atlas = ExtResource("2_42nxq")

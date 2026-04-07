@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dk2nhtpqe0yyx"]
+[gd_scene load_steps=4 format=3 uid="uid://dk2nhtpqe0yyx"]
 
 [ext_resource type="Script" uid="uid://fsexy4gcub0k" path="res://scripts/combat/combat_manager.gd" id="1_ugm31"]
 [ext_resource type="PackedScene" uid="uid://mww3mvqcra6c" path="res://scenes/entities/player.tscn" id="2_o3k7m"]
-[ext_resource type="PackedScene" uid="uid://p8vqswfr8i72" path="res://scenes/entities/enemy.tscn" id="3_lbt8a"]
 [ext_resource type="PackedScene" uid="uid://og465bebxo4g" path="res://ui/battle_ui.tscn" id="4_cywj5"]
 
 [node name="BattleScene" type="Node2D"]
@@ -17,8 +16,7 @@ z_index = 2
 position = Vector2(144, 149)
 scale = Vector2(3.02643, 3.02643)
 
-[node name="Enemy" parent="CanvasLayer" instance=ExtResource("3_lbt8a")]
+[node name="EnemyContainer" type="Node2D" parent="CanvasLayer"]
 z_index = 1
-position = Vector2(711, 166)
 
 [node name="BattleUi" parent="CanvasLayer" instance=ExtResource("4_cywj5")]

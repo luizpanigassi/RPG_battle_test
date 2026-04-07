@@ -119,17 +119,23 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
 
-[node name="EnemyContainer" type="VBoxContainer" parent="MainContainer/Layout/TopRow/EnemyPanel"]
+[node name="EnemyPanelContent" type="VBoxContainer" parent="MainContainer/Layout/TopRow/EnemyPanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
-[node name="EnemyHeader" type="Label" parent="MainContainer/Layout/TopRow/EnemyPanel/EnemyContainer"]
+[node name="EnemyHeader" type="Label" parent="MainContainer/Layout/TopRow/EnemyPanel/EnemyPanelContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.85, 0.9, 1)
 text = "ENEMIES"
 horizontal_alignment = 2
+
+[node name="EnemyContainer" type="HBoxContainer" parent="MainContainer/Layout/TopRow/EnemyPanel/EnemyPanelContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 24
 
 [node name="BottomRow" type="HBoxContainer" parent="MainContainer/Layout"]
 custom_minimum_size = Vector2(0, 340)

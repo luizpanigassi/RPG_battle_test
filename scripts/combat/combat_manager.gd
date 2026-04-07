@@ -3,6 +3,7 @@ extends Node
 
 @onready var player = $"../CanvasLayer/Player"
 @onready var ui = $"../CanvasLayer/BattleUi"
+@onready var enemy_container = $"../CanvasLayer/EnemyContainer"
 
 var waiting_for_input = false
 var turn_queue: Array = []
@@ -10,6 +11,8 @@ var player_party: Array = []
 var enemies: Array = []
 var current_turn_index := 0
 var pending_action: Action = null
+var enemy_scene = preload("res://scenes/entities/enemy.tscn")
+var enemy_visuals = {}
 
 func _ready():
 	print("Combat started!")
@@ -27,7 +30,9 @@ func _ready():
 
 func start_combat():
 	player_party = [player]
-	enemies = [Goblin.new(), Wolf.new(), Slime.new()]
+	enemies = [Goblin.new(), Kobold.new(), Slime.new()]
+
+	spawn_enemy_visuals()
 	
 	ui.setup_enemies(enemies)
 	
@@ -65,6 +70,31 @@ func next_turn():
 	else:
 		enemy_turn(current_entity)
 
+func spawn_enemy_visuals():
+	for child in enemy_container.get_children():
+		child.queue_free()
+
+	enemy_visuals.clear()
+
+	var slots = ui.get_enemy_slot_positions(enemies.size())
+
+	for i in enemies.size():
+		var enemy_data = enemies[i]
+		var visual = enemy_scene.instantiate()
+		enemy_container.add_child(visual)
+
+		visual.set_animation_prefix(enemy_data.animation_prefix)
+		visual.z_index = 1
+
+		if i < slots.size():
+			visual.position = slots[i] + enemy_data.visual_offset
+		else:
+			visual.position = Vector2(760 + 120 * (i - slots.size() + 1), 280) + enemy_data.visual_offset
+
+		visual.scale = Vector2.ONE * enemy_data.visual_scale
+		
+		enemy_visuals[enemy_data] = visual
+
 func process_status_start(entity):
 	for effect in entity.status_effects:
 		effect.on_turn_start(entity, self)
@@ -91,6 +121,9 @@ func enemy_turn(enemy_entity):
 	var decision = enemy_entity.choose_action(player_party)
 	var action = decision["action"]
 	var target = decision["target"]
+	var enemy_visual = enemy_visuals.get(enemy_entity)
+	if enemy_visual:
+		await enemy_visual.play_attack_animation()
 	ui.log_skill(enemy_entity, action)
 	
 	var damage = action.execute(enemy_entity, target, self)
@@ -114,6 +147,10 @@ func _on_target_selected(target):
 	var damage = pending_action.execute(player, target, self)
 	
 	if damage > 0:
+		if target is Enemy:
+			var target_visual = enemy_visuals.get(target)
+			if target_visual:
+				await target_visual.play_hurt_animation()
 		ui.log_damage(target, damage)
 		
 	elif damage < 0:
@@ -176,6 +213,10 @@ func is_combat_over() -> bool:
 func cleanup_dead():
 	for e in enemies.duplicate():
 		if e.hp <= 0:
+			var dead_visual = enemy_visuals.get(e)
+			if dead_visual:
+				dead_visual.queue_free()
+				enemy_visuals.erase(e)
 			enemies.erase(e)
 			turn_queue.erase(e)
 			ui.remove_enemy(e)

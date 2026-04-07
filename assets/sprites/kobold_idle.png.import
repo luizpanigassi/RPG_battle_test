@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://487e5gal4cm0"
-path="res://.godot/imported/player_attack.png-d42616b3da49b08d6902a86b796f569e.ctex"
+uid="uid://cyynaub7e3fob"
+path="res://.godot/imported/kobold_idle.png-f9883057eae2341a0aa1a2cabc969930.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/player_attack.png"
-dest_files=["res://.godot/imported/player_attack.png-d42616b3da49b08d6902a86b796f569e.ctex"]
+source_file="res://assets/sprites/kobold_idle.png"
+dest_files=["res://.godot/imported/kobold_idle.png-f9883057eae2341a0aa1a2cabc969930.ctex"]
 
 [params]
 
