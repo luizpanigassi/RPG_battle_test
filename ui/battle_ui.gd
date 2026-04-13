@@ -11,10 +11,16 @@ signal back_pressed
 @onready var enemy_container: HBoxContainer = $MainContainer/Layout/TopRow/EnemyPanel/EnemyPanelContent/EnemyContainer
 
 const MAX_BATTLE_LOG_LINES := 10
+const LOG_SKILL_COLOR := "orange"
+const LOG_DAMAGE_COLOR := "red"
+const LOG_HEAL_COLOR := "green"
+const LOG_DEBUFF_COLOR := "violet"
+const LOG_BUFF_COLOR := "skyblue"
+const LOG_NEUTRAL_COLOR := "gray"
 
 var player_low_hp_tween: Tween
 var last_player_hp := -1
-var enemy_panels = {}
+var enemy_panels: Dictionary = {}
 var highlighted_enemy = null
 var battle_log_lines: Array[String] = []
 
@@ -83,18 +89,15 @@ func clear_enemy_highlight():
 	highlighted_enemy = null
 		
 func _on_action_button_pressed(action: Action):
-	print("Selected action:", action.name)
-	emit_signal("action_selected", action)
+	action_selected.emit(action)
 	
 func _on_target_button_pressed(enemy):
 	clear_enemy_highlight()
-
-	emit_signal("target_selected", enemy)
+	target_selected.emit(enemy)
 	
 func _on_back_button_pressed():
 	clear_enemy_highlight()
-
-	emit_signal("back_pressed")
+	back_pressed.emit()
 
 func setup_enemies(enemies: Array):
 	for child in enemy_container.get_children():
@@ -133,8 +136,11 @@ func get_enemy_slot_positions(count: int) -> Array[Vector2]:
 		
 func update_hp(player, enemies):
 	player_hp_bar.max_value = player.max_hp
-	player_name_label.text = player.name
-	
+	player_name_label.text = player.display_name
+
+	if player.max_hp <= 0:
+		return
+
 	var player_ratio := float(player.hp) / float(player.max_hp)
 	
 	if last_player_hp != player.hp:
@@ -170,24 +176,30 @@ func log(text: String):
 	battle_log.append_text("\n".join(battle_log_lines))
 
 func log_skill(user, skill):
-	self.log("[color=orange]🔥 " + user.name + " uses " + skill.name + "![/color]")
+	_log_with_style(LOG_SKILL_COLOR, "🔥", user.name + " uses " + skill.name + "!")
 	
 func log_damage(target, amount):
-	self.log("[color=red]💥 " + target.name + " takes " + str(amount) + " damage![/color]")
+	_log_with_style(LOG_DAMAGE_COLOR, "💥", target.name + " takes " + str(amount) + " damage!")
 	
 func log_heal(target, amount):
-	self.log("[color=green]💚 " + target.name + " recovers " + str(amount) + " HP![/color]")
+	_log_with_style(LOG_HEAL_COLOR, "💚", target.name + " recovers " + str(amount) + " HP!")
 	
 func log_status(target, status):
-	self.log("[color=violet]☠ " + target.name + " is afflicted with " + status.name + "![/color]")
+	_log_with_style(LOG_DEBUFF_COLOR, "☠", target.name + " is afflicted with " + status.name + "!")
 
 func log_buff(target, status):
-	self.log("[color=skyblue]✨ " + target.name + " gains " + status.name + "![/color]")
+	_log_with_style(LOG_BUFF_COLOR, "✨", target.name + " gains " + status.name + "!")
 	
 func log_status_end(target, status):
-	self.log("[color=gray]✨ " + status.name + " on " + target.name + " wore off.[/color]")
+	_log_with_style(LOG_NEUTRAL_COLOR, "✨", status.name + " on " + target.name + " wore off.")
+
+func _log_with_style(color_name: String, icon: String, message: String):
+	self.log("[color=%s]%s %s[/color]" % [color_name, icon, message])
 
 func get_hp_color(current_hp: int, max_hp: int) -> Color:
+	if max_hp <= 0:
+		return Color(0.9, 0.2, 0.2)
+
 	var ratio := float(current_hp) / float(max_hp)
 	if ratio > 0.5:
 		return Color(0.2, 0.9, 0.2) #verde

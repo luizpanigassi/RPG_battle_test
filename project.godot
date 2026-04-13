@@ -11,6 +11,11 @@ config_version=5
 [application]
 
 config/name="Axé tactics"
-run/main_scene="uid://dk2nhtpqe0yyx"
+run/main_scene="uid://cqstjila1sqdy"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://scripts/system/game_manager.gd"
+SceneTransition="*res://scripts/system/scene_transition.gd"

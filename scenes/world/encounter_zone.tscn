@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpcjqltcevosv"]
+
+[ext_resource type="Script" uid="uid://gpwiw668xnk2" path="res://scripts/world/encounter_zone.gd" id="1_xa7it"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xa7it"]
+size = Vector2(20, 34.1094)
+
+[node name="EncounterZone" type="Area2D"]
+script = ExtResource("1_xa7it")
+
+[node name="EncounterArea" type="CollisionShape2D" parent="."]
+position = Vector2(0, 6)
+scale = Vector2(3.27163, 4.45625)
+shape = SubResource("RectangleShape2D_xa7it")

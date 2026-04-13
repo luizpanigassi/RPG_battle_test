@@ -1,64 +1,69 @@
-class_name SkilLFactory
+class_name SkillFactory
 extends RefCounted
 
 # Effect helpers
 
-static func status(type):
-	var s = ApplyStatusEffect.new()
-	s.status_type = type
+static func status(status_type: Script) -> ApplyStatusEffect:
+	var s: ApplyStatusEffect = ApplyStatusEffect.new()
+	s.status_type = status_type
 	return s
 	
-static func damage(power):
-	var d = DamageEffect.new()
+static func damage(power: int) -> DamageEffect:
+	var d: DamageEffect = DamageEffect.new()
 	d.power = power
 	return d
 	
-static func heal(amount):
-	var h = HealEffect.new()
+static func heal(amount: int) -> HealEffect:
+	var h: HealEffect = HealEffect.new()
 	h.amount = amount
 	return h
 
 # Poison Strike
-static func poison_strike():
-	var skill = SkillAction.new()
+static func poison_strike() -> SkillAction:
+	var skill: SkillAction = SkillAction.new()
 	skill.name = "Poison Strike"
 	
-	skill.effects = [damage(8), status(Poison)]
+	var effects: Array[Effect] = [damage(8), status(Poison)]
+	skill.effects = effects
 	
 	return skill
 	
 # Fireball
-static func fireball():
-	var skill = SkillAction.new()
+static func fireball() -> SkillAction:
+	var skill: SkillAction = SkillAction.new()
 	skill.name = "Fireball"
 	
-	skill.effects = [damage(10), status(Burn)]
+	var effects: Array[Effect] = [damage(10), status(Burn)]
+	skill.effects = effects
 	
 	return skill
 	
 # Slow Strike
-static func slow_strike():
-	var skill = SkillAction.new()
+static func slow_strike() -> SkillAction:
+	var skill: SkillAction = SkillAction.new()
 	skill.name = "Slow Strike"
 	
-	skill.effects = [damage(7), status(Slow)]
+	var effects: Array[Effect] = [damage(7), status(Slow)]
+	skill.effects = effects
 	
 	return skill
 
-static func healing():
-	var skill = SkillAction.new()
+static func healing() -> SkillAction:
+	var skill: SkillAction = SkillAction.new()
 	skill.name = "Heal"
 	skill.target_type = Action.TargetType.SELF
 	
-	skill.effects = [heal(15)]
+	var effects: Array[Effect] = [heal(15)]
+	skill.effects = effects
 	
 	return skill
 
-static func regen():
-	var skill = SkillAction.new()
+static func regen() -> SkillAction:
+	var skill: SkillAction = SkillAction.new()
 	skill.name = "Regen"
 	skill.target_type = Action.TargetType.SELF
 	
-	skill.effects = [status(Regen)]
+	var effects: Array[Effect] = [status(Regen)]
+	skill.effects = effects
 	
 	return skill

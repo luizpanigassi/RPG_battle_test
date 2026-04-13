@@ -13,5 +13,5 @@ enum TargetType {
 var name: String = "Action"
 var target_type := TargetType.ENEMY
 
-func execute(_user, _target, _combat = null):
-	pass
+func execute(_user: Entity, _target: Entity, _combat: CombatManager = null) -> int:
+	return 0

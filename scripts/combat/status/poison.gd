@@ -9,5 +9,4 @@ func _init():
 
 func on_turn_start(target, combat):
 	target.take_damage(damage)
-	print(target.name, " takes ", damage, " poison damage!")
 	combat.ui.log_damage(target, damage)

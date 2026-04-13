@@ -3,15 +3,15 @@ extends Entity
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 func _init():
-	
+	display_name = "Shadow"
 	# Normal attack
 	actions.append(AttackAction.new())
 	# Skill appends:
-	actions.append(SkilLFactory.poison_strike())
-	actions.append(SkilLFactory.fireball())
-	actions.append(SkilLFactory.slow_strike())
-	actions.append(SkilLFactory.healing())
-	actions.append(SkilLFactory.regen())
+	actions.append(SkillFactory.poison_strike())
+	actions.append(SkillFactory.fireball())
+	actions.append(SkillFactory.slow_strike())
+	actions.append(SkillFactory.healing())
+	actions.append(SkillFactory.regen())
 
 func play_attack_animation():
 	await _play_one_shot_animation("attack")

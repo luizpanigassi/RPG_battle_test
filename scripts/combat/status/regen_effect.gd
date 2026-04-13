@@ -10,5 +10,4 @@ func _init():
 
 func on_turn_start(target, combat):
 	target.heal(heal_amount)
-	print(target.name, " regenerates ", heal_amount, " damage!")
 	combat.ui.log_heal(target, heal_amount)
