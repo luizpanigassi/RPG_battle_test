@@ -14,7 +14,7 @@ func setup(e):
 		await ready
 
 	if name_label:
-		name_label.text = str(e.name)
+		name_label.text = str(e.display_name)
 	if hp_bar:
 		hp_bar.max_value = e.max_hp
 		hp_bar.value = e.hp

@@ -2,11 +2,16 @@ class_name Enemy
 extends Entity
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+var animation_prefix: String = ""
+var visual_offset: Vector2 = Vector2.ZERO
+var visual_scale: float = 1.0
 
-var animation_prefix := "goblin"
-var visual_offset := Vector2.ZERO
-var visual_scale := 1.0
-
+func apply_data(entity_data: EntityData) -> void:
+	super.apply_data(entity_data)
+	animation_prefix = entity_data.animation_prefix
+	visual_offset = entity_data.visual_offset
+	visual_scale = entity_data.visual_scale
+	
 func set_animation_prefix(prefix: String):
 	animation_prefix = prefix
 	if animated_sprite == null or animated_sprite.sprite_frames == null:

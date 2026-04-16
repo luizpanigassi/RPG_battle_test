@@ -1,9 +1,10 @@
 extends Entity
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+const PLAYER_DATA: EntityData = preload("res://scripts/entities/data/shadow.tres")
 
 func _init():
-	display_name = "Shadow"
+	apply_data(PLAYER_DATA)
 	# Normal attack
 	actions.append(AttackAction.new())
 	# Skill appends:

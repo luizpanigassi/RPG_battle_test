@@ -28,14 +28,18 @@ func _ready():
 	battle_log.scroll_active = false
 	battle_log.bbcode_enabled = true
 	
-func set_actions(actions: Array[Action]):
+func set_actions(actions: Array):
 	for panel in enemy_panels.values():
 		panel.set_highlight(false)
 
 	for child in action_container.get_children():
 		child.queue_free()
 
-	for action in actions:
+	for entry in actions:
+		var action := entry as Action
+		if action == null:
+			continue
+
 		var button := Button.new()
 		button.text = action.name
 		action_container.add_child(button)
@@ -52,7 +56,7 @@ func start_target_selection(enemies: Array):
 			continue
 		
 		var button := Button.new()
-		button.text = enemy.name
+		button.text = enemy.display_name
 		action_container.add_child(button)
 		button.mouse_entered.connect(_on_target_button_mouse_entered.bind(enemy))
 		button.mouse_exited.connect(_on_target_button_mouse_exited.bind(enemy))
@@ -176,22 +180,22 @@ func log(text: String):
 	battle_log.append_text("\n".join(battle_log_lines))
 
 func log_skill(user, skill):
-	_log_with_style(LOG_SKILL_COLOR, "🔥", user.name + " uses " + skill.name + "!")
+	_log_with_style(LOG_SKILL_COLOR, "🔥", user.display_name + " uses " + skill.name + "!")
 	
 func log_damage(target, amount):
-	_log_with_style(LOG_DAMAGE_COLOR, "💥", target.name + " takes " + str(amount) + " damage!")
+	_log_with_style(LOG_DAMAGE_COLOR, "💥", target.display_name + " takes " + str(amount) + " damage!")
 	
 func log_heal(target, amount):
-	_log_with_style(LOG_HEAL_COLOR, "💚", target.name + " recovers " + str(amount) + " HP!")
+	_log_with_style(LOG_HEAL_COLOR, "💚", target.display_name + " recovers " + str(amount) + " HP!")
 	
 func log_status(target, status):
-	_log_with_style(LOG_DEBUFF_COLOR, "☠", target.name + " is afflicted with " + status.name + "!")
+	_log_with_style(LOG_DEBUFF_COLOR, "☠", target.display_name + " is afflicted with " + status.name + "!")
 
 func log_buff(target, status):
-	_log_with_style(LOG_BUFF_COLOR, "✨", target.name + " gains " + status.name + "!")
+	_log_with_style(LOG_BUFF_COLOR, "✨", target.display_name + " gains " + status.name + "!")
 	
 func log_status_end(target, status):
-	_log_with_style(LOG_NEUTRAL_COLOR, "✨", status.name + " on " + target.name + " wore off.")
+	_log_with_style(LOG_NEUTRAL_COLOR, "✨", status.display_name + " on " + target.name + " wore off.")
 
 func _log_with_style(color_name: String, icon: String, message: String):
 	self.log("[color=%s]%s %s[/color]" % [color_name, icon, message])

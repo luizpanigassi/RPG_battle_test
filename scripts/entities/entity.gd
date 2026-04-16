@@ -8,8 +8,27 @@ var defense: int = 5
 var speed: int = 10
 var display_name: String = "Placeholder"
 
-var actions: Array[Action] = []
+var actions: Array = []
 var status_effects: Array[StatusEffect] = []
+var data: EntityData
+
+func apply_data(entity_data: EntityData) -> void:
+	if entity_data == null:
+		return
+	
+	data = entity_data
+	display_name = entity_data.display_name
+	max_hp = entity_data.max_hp
+	hp = max_hp
+	attack = entity_data.attack
+	defense = entity_data.defense
+	speed = entity_data.speed
+	
+	actions.clear()
+	for entry in entity_data.actions:
+		var action := entry as Action
+		if action != null:
+			actions.append(action.duplicate(true))
 
 func take_damage(amount: int) -> int:
 	var damage = max(amount - defense, 1)

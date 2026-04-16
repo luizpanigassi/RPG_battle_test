@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EntityData" load_steps=2 format=3 uid="uid://ca53jfpstn6wb"]
+
+[ext_resource type="Script" uid="uid://cfmxc78wepjyy" path="res://scripts/entities/data/entity_data.gd" id="2_jp1h3"]
+
+[resource]
+script = ExtResource("2_jp1h3")
+display_name = "Slime"
+max_hp = 60
+attack = 6
+defense = 3
+speed = 4
+animation_prefix = "slime"
+visual_offset = Vector2(0, -80)
+visual_scale = 3.0
+actions = Array[Resource]([])
+metadata/_custom_type_script = "uid://cfmxc78wepjyy"
