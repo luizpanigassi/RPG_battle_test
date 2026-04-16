@@ -1,6 +1,7 @@
 extends Area2D
 
 @export var encounter_rate := 0.02
+@export var activation_cooldown := 1.0
 @export var max_enemies := 3
 @export var min_enemies := 1
 @export var encounter_pool: Array[Dictionary] = [
@@ -11,13 +12,25 @@ extends Area2D
 
 var battle_started: bool = false
 
+func _ready() -> void:
+	set_physics_process(false)
+	await get_tree().create_timer(activation_cooldown).timeout
+	if not battle_started:
+		set_physics_process(true)
+
 func _physics_process(_delta: float) -> void:
-	
-	if not has_overlapping_bodies():
+	if not _has_moving_character_in_zone():
 		return
 		
 	if randf() < encounter_rate:
 		start_battle()
+
+func _has_moving_character_in_zone() -> bool:
+	for body in get_overlapping_bodies():
+		if body is CharacterBody2D and body.velocity.length_squared() > 0.01:
+			return true
+
+	return false
 		
 func start_battle():
 	if battle_started:
@@ -28,6 +41,7 @@ func start_battle():
 
 	for body in get_overlapping_bodies():
 		if body is CharacterBody2D:
+			GameManager.save_player_position(body.global_position)
 			body.velocity = Vector2.ZERO
 
 	var ids := _generate_encounter_enemy_ids()

@@ -2,6 +2,11 @@ extends CharacterBody2D
 
 @export var speed = 200
 
+
+func _ready() -> void:
+	if GameManager.has_saved_player_position:
+		global_position = GameManager.consume_saved_player_position()
+
 func _physics_process(_delta: float) -> void:
 	var dir = Vector2.ZERO
 

@@ -3,6 +3,8 @@ extends Node
 
 var max_hp: int = 100
 var hp: int = 100
+var max_sp: int = 20
+var sp: int = 20
 var attack: int = 1500
 var defense: int = 5
 var speed: int = 10
@@ -42,6 +44,9 @@ func take_damage(amount: int) -> int:
 
 func heal(amount: int):
 	hp = min(hp + amount, max_hp)
+
+func sp_recover(amount: int):
+	sp = min(sp + amount, max_sp)
 
 func apply_status(effect: StatusEffect, combat: CombatManager = null):
 	for e in status_effects:

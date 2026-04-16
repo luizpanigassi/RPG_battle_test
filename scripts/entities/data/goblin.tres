@@ -1,6 +1,5 @@
-[gd_resource type="Resource" script_class="EntityData" load_steps=3 format=3 uid="uid://b53hiifveaykc"]
+[gd_resource type="Resource" script_class="EntityData" load_steps=2 format=3 uid="uid://b53hiifveaykc"]
 
-[ext_resource type="Script" uid="uid://q8rnw1v1h4ty" path="res://scripts/actions/action.gd" id="1_cp575"]
 [ext_resource type="Script" uid="uid://cfmxc78wepjyy" path="res://scripts/entities/data/entity_data.gd" id="2_pbt4p"]
 
 [resource]
@@ -13,5 +12,7 @@ speed = 10
 animation_prefix = "goblin"
 visual_offset = Vector2(0, -100)
 visual_scale = 2.0
-actions = Array[ExtResource("1_cp575")]([])
+actions = Array[Resource]([])
+xp_reward = 5
+gold_reward = 15
 metadata/_custom_type_script = "uid://cfmxc78wepjyy"

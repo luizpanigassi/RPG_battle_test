@@ -13,4 +13,6 @@ animation_prefix = "slime"
 visual_offset = Vector2(0, -80)
 visual_scale = 3.0
 actions = Array[Resource]([])
+xp_reward = 5
+gold_reward = 6
 metadata/_custom_type_script = "uid://cfmxc78wepjyy"

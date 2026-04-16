@@ -11,3 +11,6 @@ extends Resource
 @export var visual_offset: Vector2 = Vector2.ZERO
 @export var visual_scale: float = 1.0
 @export var actions: Array[Resource] = []
+
+@export var xp_reward: int = 0
+@export var gold_reward: int = 0

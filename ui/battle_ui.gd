@@ -3,8 +3,10 @@ extends Control
 signal action_selected(action)
 signal target_selected(target)
 signal back_pressed
+signal all_enemies_confirmed
 
 @onready var player_hp_bar: ProgressBar = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerHPBar
+@onready var player_sp_bar: ProgressBar = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerSPBar
 @onready var action_container: VBoxContainer = $MainContainer/Layout/BottomRow/ActionPanel/ActionColumn/ActionContainer
 @onready var battle_log: RichTextLabel = $MainContainer/Layout/BottomRow/LogPanel/LogColumn/BattleLog
 @onready var player_name_label: Label = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerNameLabel
@@ -28,7 +30,7 @@ func _ready():
 	battle_log.scroll_active = false
 	battle_log.bbcode_enabled = true
 	
-func set_actions(actions: Array):
+func set_actions(actions: Array, user: Entity = null):
 	for panel in enemy_panels.values():
 		panel.set_highlight(false)
 
@@ -43,7 +45,7 @@ func set_actions(actions: Array):
 		var button := Button.new()
 		button.text = action.name
 		action_container.add_child(button)
-		button.pressed.connect(_on_action_button_pressed.bind(action))
+		button.pressed.connect(_on_action_button_pressed.bind(action, user, button))
 
 func start_target_selection(enemies: Array):
 	for child in action_container.get_children():
@@ -70,6 +72,50 @@ func start_target_selection(enemies: Array):
 	back_button.mouse_entered.connect(clear_enemy_highlight)
 	back_button.mouse_exited.connect(clear_enemy_highlight)
 
+func start_all_enemies_selection():
+	for child in action_container.get_children():
+		child.queue_free()
+
+	clear_enemy_highlight()
+
+	var all_button := Button.new()
+	all_button.text = "All Enemies"
+	action_container.add_child(all_button)
+	all_button.pressed.connect(func(): all_enemies_confirmed.emit())
+	all_button.mouse_entered.connect(highlight_all_enemies)
+	all_button.mouse_exited.connect(clear_all_enemy_highlight)
+
+	var back_button := Button.new()
+	back_button.text = "Back"
+	action_container.add_child(back_button)
+	back_button.pressed.connect(_on_back_button_pressed)
+	back_button.mouse_entered.connect(clear_all_enemy_highlight)
+	back_button.mouse_exited.connect(clear_all_enemy_highlight)
+
+func start_ally_target_selection(allies: Array):
+	for child in action_container.get_children():
+		child.queue_free()
+
+	clear_enemy_highlight()
+
+	for ally in allies:
+		var button := Button.new()
+		button.text = ally.display_name
+		action_container.add_child(button)
+
+		var is_dead: bool = ally.hp <= 0
+		button.disabled = is_dead
+
+		if is_dead:
+			button.modulate = Color(0.6, 0.6, 0.6, 1.0)
+		else:
+			button.pressed.connect(_on_target_button_pressed.bind(ally))
+		
+	var back_button := Button.new()
+	back_button.text = "Back"
+	action_container.add_child(back_button)
+	back_button.pressed.connect(_on_back_button_pressed)
+
 func _on_target_button_mouse_entered(enemy):
 	highlight_enemy(enemy)
 
@@ -87,13 +133,32 @@ func highlight_enemy(enemy):
 		enemy_panels[enemy].set_highlight(true)
 		highlighted_enemy = enemy
 
+func highlight_all_enemies():
+	clear_enemy_highlight()
+	for panel in enemy_panels.values():
+		panel.set_highlight(true)
+
 func clear_enemy_highlight():
 	if highlighted_enemy != null and enemy_panels.has(highlighted_enemy):
 		enemy_panels[highlighted_enemy].set_highlight(false)
 	highlighted_enemy = null
+
+func clear_all_enemy_highlight():
+	for panel in enemy_panels.values():
+		panel.set_highlight(false)
+	highlighted_enemy = null
 		
-func _on_action_button_pressed(action: Action):
+func _on_action_button_pressed(action: Action, user: Entity, button: Button):
+	if user != null and not action.can_use(user):
+		_flash_button_no_sp(button)
+		return
+
 	action_selected.emit(action)
+
+func _flash_button_no_sp(button: Button):
+	var tween := create_tween()
+	tween.tween_property(button, "modulate", Color(1.0, 0.35, 0.35), 0.08)
+	tween.tween_property(button, "modulate", Color(1.0, 1.0, 1.0), 0.12)
 	
 func _on_target_button_pressed(enemy):
 	clear_enemy_highlight()
@@ -101,6 +166,7 @@ func _on_target_button_pressed(enemy):
 	
 func _on_back_button_pressed():
 	clear_enemy_highlight()
+	clear_all_enemy_highlight()
 	back_pressed.emit()
 
 func setup_enemies(enemies: Array):
@@ -140,10 +206,13 @@ func get_enemy_slot_positions(count: int) -> Array[Vector2]:
 		
 func update_hp(player, enemies):
 	player_hp_bar.max_value = player.max_hp
+	player_sp_bar.max_value = player.max_sp
 	player_name_label.text = player.display_name
 
 	if player.max_hp <= 0:
 		return
+	
+	animate_sp_bar(player.sp, player.max_sp)
 
 	var player_ratio := float(player.hp) / float(player.max_hp)
 	
@@ -170,6 +239,13 @@ func animate_bar(bar: ProgressBar, target_value: int, max_hp: int):
 		var new_color = get_hp_color(target_value, max_hp)
 		tween.parallel().tween_property(bar, "modulate", new_color, 0.25)
 
+func animate_sp_bar(target_value: int, _max_sp: int):
+	var tween = create_tween()
+	tween.tween_property(player_sp_bar, "value", target_value, 0.25)
+	tween.tween_property(player_sp_bar, "modulate", Color(0.65, 0.85, 1.0), 0.08)
+	tween.tween_property(player_sp_bar, "modulate", Color(1,1,1), 0.12)
+
+
 func log(text: String):
 	battle_log_lines.append(text)
 
@@ -187,6 +263,9 @@ func log_damage(target, amount):
 	
 func log_heal(target, amount):
 	_log_with_style(LOG_HEAL_COLOR, "💚", target.display_name + " recovers " + str(amount) + " HP!")
+
+func log_sp_recover(target, amount):
+	_log_with_style("skyblue", "💙", target.display_name + " recovers " + str(amount) + " SP!")
 	
 func log_status(target, status):
 	_log_with_style(LOG_DEBUFF_COLOR, "☠", target.display_name + " is afflicted with " + status.name + "!")
@@ -195,7 +274,7 @@ func log_buff(target, status):
 	_log_with_style(LOG_BUFF_COLOR, "✨", target.display_name + " gains " + status.name + "!")
 	
 func log_status_end(target, status):
-	_log_with_style(LOG_NEUTRAL_COLOR, "✨", status.display_name + " on " + target.name + " wore off.")
+	_log_with_style(LOG_NEUTRAL_COLOR, "✨", status.name + " on " + target.display_name + " wore off.")
 
 func _log_with_style(color_name: String, icon: String, message: String):
 	self.log("[color=%s]%s %s[/color]" % [color_name, icon, message])
@@ -243,3 +322,10 @@ func remove_enemy(enemy):
 		
 		panel.queue_free()
 		enemy_panels.erase(enemy)
+
+func clear_for_combat_end():
+	clear_enemy_highlight()
+	clear_all_enemy_highlight()
+
+	for child in action_container.get_children():
+		child.queue_free()

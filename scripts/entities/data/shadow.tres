@@ -1,6 +1,5 @@
-[gd_resource type="Resource" script_class="EntityData" load_steps=3 format=3 uid="uid://xksge0brfe8o"]
+[gd_resource type="Resource" script_class="EntityData" load_steps=2 format=3 uid="uid://xksge0brfe8o"]
 
-[ext_resource type="Script" uid="uid://q8rnw1v1h4ty" path="res://scripts/actions/action.gd" id="1_i748w"]
 [ext_resource type="Script" uid="uid://cfmxc78wepjyy" path="res://scripts/entities/data/entity_data.gd" id="2_m203l"]
 
 [resource]
@@ -10,8 +9,10 @@ max_hp = 100
 attack = 1500
 defense = 5
 speed = 15
-animation_prefix = ""
+animation_prefix = "shadow"
 visual_offset = Vector2(0, 0)
 visual_scale = 1.0
-actions = Array[ExtResource("1_i748w")]([])
+actions = Array[Resource]([])
+xp_reward = 0
+gold_reward = 0
 metadata/_custom_type_script = "uid://cfmxc78wepjyy"

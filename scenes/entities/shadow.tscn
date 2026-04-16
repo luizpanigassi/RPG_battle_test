@@ -1,6 +1,6 @@
 [gd_scene load_steps=27 format=3 uid="uid://mww3mvqcra6c"]
 
-[ext_resource type="Script" uid="uid://bmbtihta7m53s" path="res://scripts/entities/player_party/player.gd" id="1_ucweq"]
+[ext_resource type="Script" uid="uid://bjidnqiwmqan6" path="res://scripts/entities/player_party/shadow.gd" id="1_ubj8y"]
 [ext_resource type="Texture2D" uid="uid://487e5gal4cm0" path="res://assets/sprites/player_attack.png" id="2_42nxq"]
 [ext_resource type="Texture2D" uid="uid://bkjmnvp1anmd1" path="res://assets/sprites/player_hurt.png" id="3_5u6hq"]
 [ext_resource type="Texture2D" uid="uid://jiaoxw4jqhue" path="res://assets/sprites/player_idle.png" id="4_d4qa6"]
@@ -114,7 +114,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_5ki56")
 }],
 "loop": true,
-"name": &"attack",
+"name": &"shadow_attack",
 "speed": 10.0
 }, {
 "frames": [{
@@ -131,7 +131,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_1yk18")
 }],
 "loop": true,
-"name": &"hurt",
+"name": &"shadow_hurt",
 "speed": 10.0
 }, {
 "frames": [{
@@ -166,15 +166,14 @@ animations = [{
 "texture": SubResource("AtlasTexture_yv3je")
 }],
 "loop": true,
-"name": &"idle",
+"name": &"shadow_idle",
 "speed": 10.0
 }]
 
-[node name="Player" type="Node2D"]
-script = ExtResource("1_ucweq")
+[node name="Shadow" type="Node2D"]
+script = ExtResource("1_ubj8y")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_3hm5d")
-animation = &"attack"
-autoplay = "idle"
-frame_progress = 0.802018
+animation = &"shadow_idle"
+autoplay = "shadow_idle"

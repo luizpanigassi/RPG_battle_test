@@ -13,4 +13,6 @@ animation_prefix = "kobold"
 visual_offset = Vector2(20, -100)
 visual_scale = 1.5
 actions = Array[Resource]([])
+xp_reward = 10
+gold_reward = 9
 metadata/_custom_type_script = "uid://cfmxc78wepjyy"
