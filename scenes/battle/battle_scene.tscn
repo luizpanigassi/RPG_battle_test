@@ -12,6 +12,7 @@ script = ExtResource("1_ugm31")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Player" parent="CanvasLayer" instance=ExtResource("2_pu738")]
+visible = false
 z_index = 2
 position = Vector2(144, 149)
 scale = Vector2(2.33332, 2.34643)
