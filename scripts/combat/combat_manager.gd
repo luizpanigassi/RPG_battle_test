@@ -15,12 +15,15 @@ var defeated_enemies: Array[Enemy] = []
 var current_turn_index := 0
 var pending_action: Action = null
 var current_player: Entity = null
+var dead_player_log: Dictionary = {}
 var enemy_scene = preload("res://scenes/entities/enemy.tscn")
 var enemy_visuals: Dictionary[Enemy, Enemy] = {}
 
 func _ready():
 	await get_tree().process_frame
 	await SceneTransition.fade_in()
+
+	get_viewport().size_changed.connect(_on_viewport_size_changed)
 
 	ui.action_selected.connect(_on_action_selected)
 	ui.target_selected.connect(_on_target_selected)
@@ -44,7 +47,12 @@ func start_combat():
 	spawn_enemy_visuals()
 	
 	ui.setup_enemies(enemies)
+	ui.setup_players(player_party)
+	dead_player_log.clear()
 	
+	await get_tree().process_frame
+	_reposition_player_visuals(false)
+
 	turn_queue.clear()
 	
 	for p in player_party:
@@ -57,7 +65,7 @@ func start_combat():
 
 	if not player_party.is_empty():
 		current_player = player_party[0]
-		ui.update_hp(current_player, enemies)
+		ui.update_hp(player_party, current_player, enemies)
 	
 	next_turn()
 
@@ -120,6 +128,10 @@ func next_turn():
 		return
 	
 	process_status_start(current_entity)
+	_log_new_party_deaths()
+	if current_entity.hp <= 0:
+		end_turn()
+		return
 	if player_party.has(current_entity):
 		player_turn(current_entity)
 	else:
@@ -160,7 +172,7 @@ func player_turn(player_entity: Entity):
 	current_player = player_entity
 	waiting_for_input = true
 	ui.set_actions(current_player.actions, current_player)
-	ui.update_hp(current_player, enemies)
+	ui.update_hp(player_party, current_player, enemies)
 
 func _on_action_selected(action: Action):
 	if not waiting_for_input:
@@ -195,6 +207,7 @@ func enemy_turn(enemy_entity: Enemy):
 		ui.log_damage(target, damage)
 		if target != null and player_party.has(target) and target.has_method("play_hurt_animation"):
 			await target.play_hurt_animation()
+		_log_new_party_deaths()
 		
 	elif damage < 0:
 		ui.log_heal(target, -damage)
@@ -202,7 +215,7 @@ func enemy_turn(enemy_entity: Enemy):
 	await cleanup_dead()
 	
 	if current_player != null:
-		ui.update_hp(current_player, enemies)
+		ui.update_hp(player_party, current_player, enemies)
 	end_turn()
 	
 func _on_target_selected(target: Entity):
@@ -229,11 +242,12 @@ func _on_target_selected(target: Entity):
 			if target_visual:
 				await target_visual.play_hurt_animation()
 		ui.log_damage(target, damage)
+		_log_new_party_deaths()
 		
 	elif damage < 0:
 		ui.log_heal(target, -damage)
 		
-	ui.update_hp(actor, enemies)
+	ui.update_hp(player_party, actor, enemies)
 	
 	
 	await cleanup_dead()
@@ -286,11 +300,12 @@ func _execute_action_all_enemies(actor: Entity, action: Action):
 			if target_visual:
 				await target_visual.play_hurt_animation()
 			ui.log_damage(enemy, damage)
+			_log_new_party_deaths()
 		elif damage < 0:
 			ui.log_heal(enemy, -damage)
 
 	pending_action = null
-	ui.update_hp(actor, enemies)
+	ui.update_hp(player_party, actor, enemies)
 
 	await cleanup_dead()
 	ui.set_actions(actor.actions, actor)
@@ -308,6 +323,7 @@ func end_turn():
 	var entity: Entity = turn_queue[current_turn_index]
 
 	process_status_end(entity)
+	_log_new_party_deaths()
 
 	current_turn_index += 1
 	
@@ -365,21 +381,18 @@ func end_combat():
 	pending_action = null
 	ui.clear_for_combat_end()
 
-	var leader: Entity = null
-	if not player_party.is_empty():
-		leader = player_party[0]
-	elif current_player != null:
-		leader = current_player
-
-	if leader != null:
-		GameManager.player_stats.sync_current_hp(leader.hp, leader.max_hp)
-		GameManager.player_stats.sync_current_sp(leader.sp, leader.max_sp)
-
 	var all_players_dead := true
 	for p in player_party:
 		if p.hp > 0:
 			all_players_dead = false
-			break
+
+	for p in player_party:
+		if not (p is CombatPlayer):
+			continue
+		var combat_player := p as CombatPlayer
+		var member_state := GameManager.get_party_member_state(combat_player.get_party_member_id())
+		member_state.sync_current_hp(combat_player.hp, combat_player.max_hp)
+		member_state.sync_current_sp(combat_player.sp, combat_player.max_sp)
 
 	if all_players_dead:
 		ui.log("[color=red]Defeat...[/color]")
@@ -420,3 +433,60 @@ func _reposition_enemy_visuals(animated := true) -> void:
 		else:
 			visual.position = target_pos
 		
+func _reposition_player_visuals(animated := true) -> void:
+	var slots = ui.get_player_slot_positions(player_party.size())
+
+	for i in player_party.size():
+		var entity := player_party[i]
+		var visual_any: Variant = entity
+		if not(visual_any is Node2D):
+			continue
+		var visual: Node2D = visual_any
+
+		var target_pos: Vector2
+		if i < slots.size():
+			target_pos = slots[i]
+		else:
+			target_pos = Vector2(144 + 90 * i, 230 + 24 * i)
+		
+		if entity.data != null:
+			target_pos += entity.data.visual_offset
+
+		if animated:
+			var tween := create_tween()
+			tween.set_trans(Tween.TRANS_QUAD)
+			tween.set_ease(Tween.EASE_OUT)
+			tween.tween_property(visual, "position", target_pos, 0.2)
+		else:
+			visual.position = target_pos
+
+func _on_viewport_size_changed():
+	_reposition_enemy_visuals(false)
+	_reposition_player_visuals(false)
+
+func _log_new_party_deaths() -> void:
+	for p in player_party:
+		if p == null or p.hp > 0:
+			if p != null:
+				var live_member_id := ""
+				if p is CombatPlayer:
+					live_member_id = (p as CombatPlayer).get_party_member_id()
+				else:
+					live_member_id = p.display_name.to_lower().replace(" ", "_")
+				if not live_member_id.is_empty():
+					dead_player_log.erase(live_member_id)
+			continue
+
+		var member_id := ""
+		if p is CombatPlayer:
+			member_id = (p as CombatPlayer).get_party_member_id()
+		else:
+			member_id = p.display_name.to_lower().replace(" ", "_")
+
+		if member_id.is_empty():
+			continue
+		if dead_player_log.has(member_id):
+			continue
+
+		dead_player_log[member_id] = true
+		ui.log("[color=orange]%s died![/color]" % p.display_name)

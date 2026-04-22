@@ -5,11 +5,9 @@ signal target_selected(target)
 signal back_pressed
 signal all_enemies_confirmed
 
-@onready var player_hp_bar: ProgressBar = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerHPBar
-@onready var player_sp_bar: ProgressBar = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerSPBar
+@onready var player_party_container: HBoxContainer = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerPartyContainer
 @onready var action_container: VBoxContainer = $MainContainer/Layout/BottomRow/ActionPanel/ActionColumn/ActionContainer
 @onready var battle_log: RichTextLabel = $MainContainer/Layout/BottomRow/LogPanel/LogColumn/BattleLog
-@onready var player_name_label: Label = $MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer/PlayerNameLabel
 @onready var enemy_container: HBoxContainer = $MainContainer/Layout/TopRow/EnemyPanel/EnemyPanelContent/EnemyContainer
 
 const MAX_BATTLE_LOG_LINES := 10
@@ -20,9 +18,9 @@ const LOG_DEBUFF_COLOR := "violet"
 const LOG_BUFF_COLOR := "skyblue"
 const LOG_NEUTRAL_COLOR := "gray"
 
-var player_low_hp_tween: Tween
-var last_player_hp := -1
+var player_panels: Dictionary = {}
 var enemy_panels: Dictionary = {}
+var current_player = null
 var highlighted_enemy = null
 var battle_log_lines: Array[String] = []
 
@@ -184,6 +182,18 @@ func setup_enemies(enemies: Array):
 		panel.setup(e)
 		enemy_panels[e] = panel
 
+func setup_players(players: Array):
+	for child in player_party_container.get_children():
+		child.queue_free()
+	player_panels.clear()
+	var panel_scene = preload("res://ui/player_party_panel.tscn")
+	for p in players:
+		var panel = panel_scene.instantiate()
+		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		player_party_container.add_child(panel)
+		panel.setup(p)
+		player_panels[p] = panel
+
 func get_enemy_slot_positions(count: int) -> Array[Vector2]:
 	var positions: Array[Vector2] = []
 	if count <= 0:
@@ -203,49 +213,52 @@ func get_enemy_slot_positions(count: int) -> Array[Vector2]:
 		positions.append(Vector2(x, y))
 
 	return positions
-		
-func update_hp(player, enemies):
-	player_hp_bar.max_value = player.max_hp
-	player_sp_bar.max_value = player.max_sp
-	player_name_label.text = player.display_name
 
-	if player.max_hp <= 0:
-		return
-	
-	animate_sp_bar(player.sp, player.max_sp)
+func get_player_slot_positions(count: int) -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+	if count <= 0:
+		return positions
 
-	var player_ratio := float(player.hp) / float(player.max_hp)
+	var panels := player_party_container.get_children()
+	var baseline_y := player_party_container.global_position.y + player_party_container.size.y + 22.0
+
+	if panels.size() >= count:
+		for i in count:
+			var panel := panels[i] as Control
+			if panel == null:
+				continue
+			var center_x := panel.global_position.x + panel.size.x * 0.5
+			positions.append(Vector2(center_x, baseline_y))
+		return positions
+
+	var width := player_party_container.size.x
+	if width <= 0.0:
+		width = player_party_container.get_combined_minimum_size().x
+	if width <= 0.0:
+		width = 420.0
+
+	var step := width / float(count)
+	for i in count:
+		var x := player_party_container.global_position.x + step * (float(i) + 0.5)
+		positions.append(Vector2(x, baseline_y))
+
+	return positions
+		
+func update_hp(players: Array, active_player, enemies: Array):
+	update_party_and_enemies(players, active_player, enemies)
+
+func update_party_and_enemies(players: Array, active_player, enemies: Array):
+	current_player = active_player
+
+	for p in players:
+		if player_panels.has(p):
+			player_panels[p].update_stats()
+			player_panels[p].set_active_turn(p == active_player)
 	
-	if last_player_hp != player.hp:
-		animate_bar(player_hp_bar, player.hp, player.max_hp)
-		last_player_hp = player.hp
-		
-	if player_ratio <= 0.2:
-		if player_low_hp_tween == null:
-			start_low_hp_pulse(player_hp_bar)
-	else:
-		stop_low_hp_pulse(player_hp_bar, player.hp, player.max_hp)
-		
 	for e in enemies:
 		if enemy_panels.has(e):
 			enemy_panels[e].update_hp()
 	
-func animate_bar(bar: ProgressBar, target_value: int, max_hp: int):
-	var tween = create_tween()
-	tween.tween_property(bar, "value", target_value, 0.4)
-	tween.tween_property(bar, "modulate", Color(1,0.7,0.7), 0.1)
-	tween.tween_property(bar, "modulate", Color(1,1,1), 0.1)
-	if not is_low_hp_active(bar):
-		var new_color = get_hp_color(target_value, max_hp)
-		tween.parallel().tween_property(bar, "modulate", new_color, 0.25)
-
-func animate_sp_bar(target_value: int, _max_sp: int):
-	var tween = create_tween()
-	tween.tween_property(player_sp_bar, "value", target_value, 0.25)
-	tween.tween_property(player_sp_bar, "modulate", Color(0.65, 0.85, 1.0), 0.08)
-	tween.tween_property(player_sp_bar, "modulate", Color(1,1,1), 0.12)
-
-
 func log(text: String):
 	battle_log_lines.append(text)
 
@@ -290,27 +303,6 @@ func get_hp_color(current_hp: int, max_hp: int) -> Color:
 		return Color(0.9, 0.8, 0.2) #amarelo
 	else:
 		return Color(0.9, 0.2, 0.2) #vermelho
-		
-func start_low_hp_pulse(bar: ProgressBar):
-	var tween = create_tween()
-	tween.set_loops()
-	
-	tween.tween_property(bar, "modulate", Color(1, 0.4, 0.4), 0.4)
-	tween.tween_property(bar, "modulate", Color(0.9, 0.2, 0.2), 0.4)
-
-	player_low_hp_tween = tween
-		
-func stop_low_hp_pulse(bar: ProgressBar, current_hp: int, max_hp: int):
-	var tween = player_low_hp_tween
-	player_low_hp_tween = null
-		
-	if tween:
-		tween.kill()
-	
-	bar.modulate = get_hp_color(current_hp, max_hp)
-
-func is_low_hp_active(bar: ProgressBar) -> bool:
-	return(bar == player_hp_bar and player_low_hp_tween != null)
 
 func remove_enemy(enemy):
 	if enemy_panels.has(enemy):

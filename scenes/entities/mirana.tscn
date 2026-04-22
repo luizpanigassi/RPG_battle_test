@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://biu7h661po4ke" path="res://scripts/entities/player_party/mirana.gd" id="1_m0g0q"]
 [ext_resource type="Texture2D" uid="uid://bg2nrpi1or8xg" path="res://assets/sprites/mirana_attack.png" id="2_m0g0q"]
-[ext_resource type="Resource" path="res://scripts/entities/data/mirana.tres" id="2_x1m8r"]
+[ext_resource type="Resource" uid="uid://g3rfgib57dw2" path="res://scripts/entities/data/mirana.tres" id="2_x1m8r"]
 [ext_resource type="Texture2D" uid="uid://cdt02jtjwisi0" path="res://assets/sprites/mirana_death.png" id="3_f2kaj"]
 [ext_resource type="Texture2D" uid="uid://dkp2sas1k4dmd" path="res://assets/sprites/mirana_hurt.png" id="4_vqnwt"]
 [ext_resource type="Texture2D" uid="uid://6llvh50tlrnj" path="res://assets/sprites/mirana_idle.png" id="5_j1xkk"]

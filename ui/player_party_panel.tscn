@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://c2iyycwc2qunv"]
+
+[ext_resource type="Script" uid="uid://pfys4aowfehk" path="res://ui/player_party_panel.gd" id="1_46r63"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gp45j"]
+bg_color = Color(0.103675, 0.206668, 0.0720591, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_46r63"]
+bg_color = Color(0.0724664, 0.358361, 0.368077, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="PlayerPanel" type="PanelContainer"]
+script = ExtResource("1_46r63")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="PlayerNameLabel" type="Label" parent="Content"]
+layout_mode = 2
+
+[node name="PlayerHPBar" type="ProgressBar" parent="Content"]
+custom_minimum_size = Vector2(180, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/fill = SubResource("StyleBoxFlat_gp45j")
+value = 100.0
+show_percentage = false
+
+[node name="PlayerSPBar" type="ProgressBar" parent="Content"]
+custom_minimum_size = Vector2(180, 18)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/fill = SubResource("StyleBoxFlat_46r63")
+value = 100.0
+show_percentage = false

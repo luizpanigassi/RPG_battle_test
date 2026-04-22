@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://og465bebxo4g"]
+[gd_scene load_steps=4 format=3 uid="uid://og465bebxo4g"]
 
 [ext_resource type="Script" uid="uid://drrtmsxbj5xir" path="res://ui/battle_ui.gd" id="1_fyysl"]
 
@@ -17,20 +17,6 @@ corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_76cpj"]
-bg_color = Color(0.103675, 0.206668, 0.0720591, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fyysl"]
-bg_color = Color(0.0724664, 0.358361, 0.368077, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_log"]
 content_margin_left = 12.0
@@ -109,26 +95,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="PlayerNameLabel" type="Label" parent="MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer"]
+[node name="PlayerPartyContainer" type="HBoxContainer" parent="MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.98, 1, 1)
-theme_override_font_sizes/font_size = 22
-
-[node name="PlayerHPBar" type="ProgressBar" parent="MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer"]
-custom_minimum_size = Vector2(180, 18)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/fill = SubResource("StyleBoxFlat_76cpj")
-value = 100.0
-show_percentage = false
-
-[node name="PlayerSPBar" type="ProgressBar" parent="MainContainer/Layout/TopRow/PlayerPanel/PlayerContainer"]
-custom_minimum_size = Vector2(180, 18)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/fill = SubResource("StyleBoxFlat_fyysl")
-value = 100.0
-show_percentage = false
+size_flags_vertical = 3
+theme_override_constants/separation = 12
 
 [node name="EnemyPanel" type="PanelContainer" parent="MainContainer/Layout/TopRow"]
 custom_minimum_size = Vector2(0, 200)

@@ -27,9 +27,24 @@ func _setup_player_data():
 
 	var stats := GameManager.player_stats
 	max_hp += stats.max_hp_bonus
-	hp = stats.resolve_starting_hp(max_hp)
 	attack += stats.attack_bonus
 	defense += stats.defense_bonus
+
+	var member_state := GameManager.get_party_member_state(get_party_member_id())
+	hp = member_state.resolve_starting_hp(max_hp)
+	sp = member_state.resolve_starting_sp(max_sp)
+
+func get_party_member_id() -> String:
+	if not animation_prefix.is_empty():
+		return animation_prefix
+
+	if entity_data != null and not entity_data.animation_prefix.is_empty():
+		return entity_data.animation_prefix
+
+	if entity_data != null and not entity_data.display_name.is_empty():
+		return entity_data.display_name.to_lower().replace(" ", "_")
+
+	return display_name.to_lower().replace(" ", "_")
 
 func _build_loadout():
 	# child class vai montar

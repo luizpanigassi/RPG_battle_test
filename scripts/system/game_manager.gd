@@ -2,6 +2,7 @@ extends Node
 
 var player_data
 var player_stats: PlayerStats = PlayerStats.new()
+var party_member_states: Dictionary[String, PartyMemberState] = {}
 var pending_enemy_ids: Array[String] = []
 var saved_player_position: Vector2 = Vector2.ZERO
 var has_saved_player_position: bool = false
@@ -62,6 +63,17 @@ func create_player_by_id(player_id: String):
 		return null
 
 	return packed_scene.instantiate()
+
+func get_party_member_state(member_id: String) -> PartyMemberState:
+	if member_id.is_empty():
+		member_id = "shadow"
+
+	var state = party_member_states.get(member_id, null)
+	if state == null:
+		state = PartyMemberState.new()
+		party_member_states[member_id] = state
+
+	return state
 
 func save_player_position(pos: Vector2) -> void:
 	saved_player_position = pos

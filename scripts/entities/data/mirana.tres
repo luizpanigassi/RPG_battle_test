@@ -1,7 +1,6 @@
-[gd_resource type="Resource" script_class="EntityData" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="EntityData" load_steps=2 format=3 uid="uid://g3rfgib57dw2"]
 
-[ext_resource type="Script" path="res://scripts/actions/action.gd" id="1_i748w"]
-[ext_resource type="Script" path="res://scripts/entities/data/entity_data.gd" id="2_m203l"]
+[ext_resource type="Script" uid="uid://cfmxc78wepjyy" path="res://scripts/entities/data/entity_data.gd" id="2_m203l"]
 
 [resource]
 script = ExtResource("2_m203l")
@@ -11,7 +10,9 @@ attack = 1500
 defense = 5
 speed = 15
 animation_prefix = "mirana"
-visual_offset = Vector2(0, 0)
-visual_scale = 1.0
-actions = Array[ExtResource("1_i748w")]([])
+visual_offset = Vector2(0, -150)
+visual_scale = 2.0
+actions = Array[Resource]([])
+xp_reward = 0
+gold_reward = 0
 metadata/_custom_type_script = "uid://cfmxc78wepjyy"
