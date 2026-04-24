@@ -75,8 +75,21 @@ func _play_idle():
 		animated_sprite.play(idle_name)
 
 func choose_action(targets: Array):
-	var target = targets[0]
+	var alive_targets: Array[Entity] = []
+
+	for target in targets:
+		if target != null and target.hp > 0:
+			alive_targets.append(target)
+	
+	if alive_targets.is_empty():
+		return {
+			"action": null,
+			"target": null
+		}
+	
+	var target: Entity = alive_targets[randi() % alive_targets.size()]
 	var action = AttackAction.new()
+	
 	return {
 		"action": action,
 		"target": target

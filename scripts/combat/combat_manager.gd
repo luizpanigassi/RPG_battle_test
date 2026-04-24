@@ -48,7 +48,7 @@ func start_combat():
 	
 	ui.setup_enemies(enemies)
 	ui.setup_players(player_party)
-	dead_player_log.clear()
+	_prime_dead_player_log()
 	
 	await get_tree().process_frame
 	_reposition_player_visuals(false)
@@ -196,6 +196,23 @@ func enemy_turn(enemy_entity: Enemy):
 	var decision = enemy_entity.choose_action(player_party)
 	var action: Action = decision["action"]
 	var target: Entity = decision["target"]
+
+	if action == null or target == null:
+		end_turn()
+		return
+	
+	if target.hp <= 0:
+		var alive_targets: Array[Entity] = []
+		for p in player_party:
+			if p.hp> 0:
+				alive_targets.append(p)
+		
+		if alive_targets.is_empty():
+			end_turn()
+			return
+		
+		target = alive_targets[randi() % alive_targets.size()]
+
 	var enemy_visual = enemy_visuals.get(enemy_entity)
 	if enemy_visual:
 		await enemy_visual.play_attack_animation()
@@ -490,3 +507,19 @@ func _log_new_party_deaths() -> void:
 
 		dead_player_log[member_id] = true
 		ui.log("[color=orange]%s died![/color]" % p.display_name)
+
+func _prime_dead_player_log() -> void:
+	dead_player_log.clear()
+
+	for p in player_party:
+		if p == null or p.hp > 0:
+			continue
+		
+		var member_id := ""
+		if p is CombatPlayer:
+			member_id = (p as CombatPlayer).get_party_member_id()
+		else:
+			member_id = p.display_name.to_lower().replace(" ", "_")
+
+		if not member_id.is_empty():
+			dead_player_log[member_id] = true
