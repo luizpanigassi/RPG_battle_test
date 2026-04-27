@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5ay7kyafe0hj"]
+
+[ext_resource type="Script" uid="uid://dn4n3hendm08j" path="res://ui/load_screen.gd" id="1_owtaa"]
+
+[node name="LoadScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_owtaa")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="LoadGameButton1" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "THIS IS A TEST BUTTON"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 337.0
+offset_top = 59.0
+offset_right = 734.0
+offset_bottom = 82.0
+text = "THIS IS JUST A LOAD SCENE, NOTHING TO SEE HERE!"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1049.0
+offset_top = 582.0
+offset_right = 1099.0
+offset_bottom = 613.0
+text = "BACK"

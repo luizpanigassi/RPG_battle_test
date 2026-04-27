@@ -171,6 +171,7 @@ animations = [{
 }]
 
 [node name="Shadow" type="Node2D"]
+position = Vector2(32, 42)
 script = ExtResource("1_ubj8y")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
