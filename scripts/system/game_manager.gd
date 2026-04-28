@@ -6,7 +6,7 @@ var party_member_states: Dictionary[String, PartyMemberState] = {}
 var pending_enemy_ids: Array[String] = []
 var saved_player_position: Vector2 = Vector2.ZERO
 var has_saved_player_position: bool = false
-var active_player_ids: Array[String] = ["shadow", "mirana"]
+var active_player_ids: Array[String] = ["shadow"]
 
 var enemy_factories := {
 	"goblin": func(): return Goblin.new(),

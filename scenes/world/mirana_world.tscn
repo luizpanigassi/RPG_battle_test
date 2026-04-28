@@ -1,0 +1,64 @@
+[gd_scene load_steps=9 format=3 uid="uid://bev6dj0b0l62v"]
+
+[ext_resource type="Texture2D" uid="uid://6llvh50tlrnj" path="res://assets/sprites/mirana_idle.png" id="1_35egc"]
+[ext_resource type="Script" uid="uid://jmukupogn826" path="res://scripts/entities/world/mirana_world.gd" id="1_tqlmp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tqlmp"]
+size = Vector2(35, 57)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rfma5"]
+atlas = ExtResource("1_35egc")
+region = Rect2(0, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_npiuv"]
+atlas = ExtResource("1_35egc")
+region = Rect2(128, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6gm2q"]
+atlas = ExtResource("1_35egc")
+region = Rect2(256, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vqmsk"]
+atlas = ExtResource("1_35egc")
+region = Rect2(384, 0, 128, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1mvdk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rfma5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_npiuv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6gm2q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vqmsk")
+}],
+"loop": true,
+"name": &"mirana_idle",
+"speed": 10.0
+}]
+
+[node name="MiranaWorld" type="Area2D"]
+script = ExtResource("1_tqlmp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-2.5, 24.5)
+shape = SubResource("RectangleShape2D_tqlmp")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_1mvdk")
+animation = &"mirana_idle"
+frame_progress = 0.783227
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_left = -49.0
+offset_top = -21.0
+offset_right = 52.0
+offset_bottom = -6.0
+theme_override_font_sizes/font_size = 10
+text = "FALAR COM MIRANA"

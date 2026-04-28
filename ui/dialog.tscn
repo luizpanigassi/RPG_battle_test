@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=3 uid="uid://bo0o2l71r3kpt"]
+
+[ext_resource type="Script" uid="uid://8rt2d3cqy0tl" path="res://ui/dialog.gd" id="1_nqqr4"]
+
+[node name="Dialog" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_nqqr4")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.519)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(640, 240)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DialogLabel" type="RichTextLabel" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "Hi, I'm Mirana! I am also a hero of light, destined to fight the evil lord Badguy! Do you want me to join you in your cause? I'm sure you can't continue without me!"
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonYes" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Yes!"
+
+[node name="ButtonNo" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "No :("

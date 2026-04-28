@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://cqstjila1sqdy"]
+[gd_scene load_steps=8 format=3 uid="uid://cqstjila1sqdy"]
 
 [ext_resource type="Texture2D" uid="uid://cjdb01sabi0lv" path="res://assets/tilemaps/tileset_grass.png" id="1_373mm"]
+[ext_resource type="Script" uid="uid://cm0vh4ckvga2n" path="res://scripts/world/overworld.gd" id="1_h0wcu"]
 [ext_resource type="PackedScene" uid="uid://bft5r3o8tqwxh" path="res://scenes/world/player_world.tscn" id="1_vqr3w"]
 [ext_resource type="PackedScene" uid="uid://bpcjqltcevosv" path="res://scenes/world/encounter_zone.tscn" id="2_wwcdr"]
+[ext_resource type="PackedScene" uid="uid://bev6dj0b0l62v" path="res://scenes/world/mirana_world.tscn" id="4_espw7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fxtkv"]
 texture = ExtResource("1_373mm")
@@ -267,6 +269,7 @@ texture = ExtResource("1_373mm")
 sources/0 = SubResource("TileSetAtlasSource_fxtkv")
 
 [node name="Overworld" type="Node2D"]
+script = ExtResource("1_h0wcu")
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_h0wcu")
@@ -275,6 +278,9 @@ layer_0/tile_data = PackedInt32Array(327684, 262144, 5, 393220, 262144, 6, 45875
 
 [node name="PlayerWorld" parent="." instance=ExtResource("1_vqr3w")]
 position = Vector2(146, 94)
+
+[node name="MiranaWorld" parent="." instance=ExtResource("4_espw7")]
+position = Vector2(555, 300)
 
 [node name="EncounterZone" parent="." instance=ExtResource("2_wwcdr")]
 position = Vector2(242, 175)
@@ -287,3 +293,5 @@ scale = Vector2(-0.738541, 0.584956)
 [node name="EncounterZone3" parent="." instance=ExtResource("2_wwcdr")]
 position = Vector2(433, 220)
 scale = Vector2(-0.738541, 0.584956)
+
+[node name="UILayer" type="CanvasLayer" parent="."]
