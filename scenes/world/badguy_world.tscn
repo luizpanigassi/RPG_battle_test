@@ -1,0 +1,90 @@
+[gd_scene load_steps=13 format=3 uid="uid://bjwtar01v3c5u"]
+
+[ext_resource type="Texture2D" uid="uid://d3wsfi0yysglx" path="res://assets/sprites/badguy_fullsheet.png" id="1_gi4is"]
+[ext_resource type="Script" uid="uid://bhrxf8bnn2qil" path="res://scripts/entities/world/badguy_world.gd" id="1_n16rn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n16rn"]
+atlas = ExtResource("1_gi4is")
+region = Rect2(0, 0, 160, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5wgsd"]
+atlas = ExtResource("1_gi4is")
+region = Rect2(160, 0, 160, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3e4g0"]
+atlas = ExtResource("1_gi4is")
+region = Rect2(320, 0, 160, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xldw4"]
+atlas = ExtResource("1_gi4is")
+region = Rect2(480, 0, 160, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2b23r"]
+atlas = ExtResource("1_gi4is")
+region = Rect2(640, 0, 160, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walpq"]
+atlas = ExtResource("1_gi4is")
+region = Rect2(800, 0, 160, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chqg8"]
+atlas = ExtResource("1_gi4is")
+region = Rect2(960, 0, 160, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eqkom"]
+atlas = ExtResource("1_gi4is")
+region = Rect2(1120, 0, 160, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tnv0l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n16rn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5wgsd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3e4g0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xldw4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2b23r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walpq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chqg8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eqkom")
+}],
+"loop": true,
+"name": &"badguy_idle",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gi4is"]
+size = Vector2(47, 61)
+
+[node name="Badguy" type="Area2D"]
+script = ExtResource("1_n16rn")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_tnv0l")
+animation = &"badguy_idle"
+autoplay = "badguy_idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 22)
+shape = SubResource("RectangleShape2D_gi4is")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -50.0
+offset_top = -23.0
+offset_right = 56.0
+theme_override_font_sizes/font_size = 10
+text = "TALK TO THE BADGUY"

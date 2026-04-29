@@ -43,6 +43,7 @@ animations = [{
 }]
 
 [node name="MiranaWorld" type="Area2D"]
+position = Vector2(456, 266)
 script = ExtResource("1_tqlmp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -61,4 +62,4 @@ offset_top = -21.0
 offset_right = 52.0
 offset_bottom = -6.0
 theme_override_font_sizes/font_size = 10
-text = "FALAR COM MIRANA"
+text = "TALK TO MIRANA"

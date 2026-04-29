@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://dw58km1byr8fn"]
+
+[ext_resource type="Script" uid="uid://bfmg1sc7obs6l" path="res://ui/game_over.gd" id="1_oo8kp"]
+
+[node name="GameOver" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_oo8kp")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="GameOverLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 158.0
+offset_top = 253.0
+offset_right = 1018.0
+offset_bottom = 349.0
+theme_override_colors/font_color = Color(13.813, 0, 0, 1)
+theme_override_font_sizes/font_size = 21
+text = "Your heroes have been defeated. The world now will descend into chaos... off screen.
+
+But you can always try again..."
+horizontal_alignment = 1

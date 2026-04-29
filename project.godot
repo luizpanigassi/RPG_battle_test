@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Axé tactics"
+config/name="Heroes of Cliche"
 run/main_scene="uid://vea1wigl82pq"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"

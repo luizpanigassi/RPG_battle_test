@@ -14,6 +14,7 @@ func _ready():
 	start_button.grab_focus()
 
 func _on_start_button_pressed() -> void:
+	GameManager.reset_run()
 	SceneTransition.transition_to_scene("res://scenes/world/overworld.tscn")
 
 func _on_load_button_pressed() -> void:

@@ -48,3 +48,14 @@ func transition_to_scene(scene_path: String):
 	await get_tree().process_frame
 	await fade_in()
 	is_transitioning = false
+
+func fade_transition_to_scene(scene_path: String) -> void:
+	if is_transitioning:
+		return
+	
+	is_transitioning = true
+	await fade_out()
+	get_tree().change_scene_to_file(scene_path)
+	await get_tree().process_frame
+	await fade_in()
+	is_transitioning = false

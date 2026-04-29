@@ -7,11 +7,13 @@ var pending_enemy_ids: Array[String] = []
 var saved_player_position: Vector2 = Vector2.ZERO
 var has_saved_player_position: bool = false
 var active_player_ids: Array[String] = ["shadow"]
+var has_holy_mcguffin: bool = false
 
 var enemy_factories := {
 	"goblin": func(): return Goblin.new(),
 	"kobold": func(): return Kobold.new(),
 	"slime": func(): return Slime.new(),
+	"badguy": func(): return Badguy.new(),
 }
 
 var player_scene_paths := {
@@ -103,3 +105,11 @@ func grant_battle_rewards(defeated_enemies: Array) -> Dictionary:
 		"xp": total_xp,
 		"gold": total_gold,
 	}
+
+func reset_run() -> void:
+	player_stats = PlayerStats.new()
+	party_member_states.clear()
+	pending_enemy_ids.clear()
+	saved_player_position = Vector2.ZERO
+	has_saved_player_position = false
+	active_player_ids = ["shadow"]

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EntityData" load_steps=2 format=3 uid="uid://cd6jipkac2ku1"]
+
+[ext_resource type="Script" uid="uid://cfmxc78wepjyy" path="res://scripts/entities/data/entity_data.gd" id="1_opwvh"]
+
+[resource]
+script = ExtResource("1_opwvh")
+display_name = "Tim, the Sorcerer"
+max_hp = 10000000
+attack = 10000000
+defense = 5
+speed = 10
+animation_prefix = "badguy"
+visual_offset = Vector2(0, -140)
+visual_scale = 2.3
+actions = Array[Resource]([])
+xp_reward = 0
+gold_reward = 0
+metadata/_custom_type_script = "uid://cfmxc78wepjyy"

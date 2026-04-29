@@ -6,7 +6,6 @@ extends Node
 @onready var enemy_container = $"../CanvasLayer/EnemyContainer"
 
 var player_anchor: Node2D = null
-
 var waiting_for_input = false
 var turn_queue: Array[Entity] = []
 var player_party: Array[Entity] = []
@@ -18,6 +17,11 @@ var current_player: Entity = null
 var dead_player_log: Dictionary = {}
 var enemy_scene = preload("res://scenes/entities/enemy.tscn")
 var enemy_visuals: Dictionary[Enemy, Enemy] = {}
+var battle_is_boss := false
+var atb_gauge: Dictionary = {}
+var current_turn_entity: Entity = null
+
+const ATB_THRESHOLD := 100.0
 
 func _ready():
 	await get_tree().process_frame
@@ -35,6 +39,7 @@ func _ready():
 func start_combat():
 	_spawn_player_party()
 	var enemy_ids := GameManager.consume_pending_encounter()
+	battle_is_boss = enemy_ids.has("badguy")
 
 	enemies.clear()
 	for enemy_id in enemy_ids:
@@ -60,12 +65,7 @@ func start_combat():
 	for e in enemies:
 		turn_queue.append(e)
 	
-	sort_turn_order()
-	current_turn_index = 0
-
-	if not player_party.is_empty():
-		current_player = player_party[0]
-		ui.update_hp(player_party, current_player, enemies)
+	_init_atb_gauges()
 	
 	next_turn()
 
@@ -109,6 +109,49 @@ func _spawn_player_party():
 			fallback.z_index = base_z_index
 			canvas_layer.add_child(fallback)
 			player_party.append(fallback)
+
+func _init_atb_gauges() -> void:
+	atb_gauge.clear()
+
+	for entity in turn_queue:
+		atb_gauge[entity] = 0.0
+
+func get_living_turn_entities() -> Array[Entity]:
+	var living: Array[Entity] = []
+	for entity in turn_queue:
+		if entity != null and entity.hp > 0:
+			living.append(entity)
+	return living
+
+func pick_next_actor_by_atb() -> Entity:
+	while true:
+		var living: Array[Entity] = get_living_turn_entities()
+		if living.is_empty():
+			return null
+
+		for entity in living:
+			var gauge: float = float(atb_gauge.get(entity, 0.0))
+			var speed_value: float = max(1.0, float(entity.speed))
+			atb_gauge[entity] = gauge + speed_value
+
+		var ready_entities: Array[Entity] = []
+		for entity in living:
+			if float(atb_gauge.get(entity, 0.0)) >= ATB_THRESHOLD:
+				ready_entities.append(entity)
+
+		if ready_entities.is_empty():
+			continue
+
+		var chosen: Entity = ready_entities[0]
+		for entity in ready_entities:
+			var entity_gauge: float = float(atb_gauge.get(entity, 0.0))
+			var chosen_gauge: float = float(atb_gauge.get(chosen, 0.0))
+			if entity_gauge > chosen_gauge:
+				chosen = entity
+
+		atb_gauge[chosen] = float(atb_gauge.get(chosen, 0.0)) - ATB_THRESHOLD
+		return chosen
+	return null
 	
 func sort_turn_order():
 	turn_queue.sort_custom(func(a, b):
@@ -117,21 +160,27 @@ func sort_turn_order():
 
 func next_turn():
 	if turn_queue.is_empty():
+		end_combat()
 		return
+	
 	if is_combat_over():
 		end_combat()
 		return
 	
-	var current_entity: Entity = turn_queue[current_turn_index]
+	var current_entity := pick_next_actor_by_atb()
+	if current_entity == null:
+		end_combat()
+		return
+
+	current_turn_entity = current_entity
+	_log_new_party_deaths()
+
+	ui.log(current_turn_entity.display_name + "'s turn!")
+
 	if current_entity.hp <= 0:
 		end_turn()
 		return
 	
-	process_status_start(current_entity)
-	_log_new_party_deaths()
-	if current_entity.hp <= 0:
-		end_turn()
-		return
 	if player_party.has(current_entity):
 		player_turn(current_entity)
 	else:
@@ -333,20 +382,12 @@ func end_turn():
 	if turn_queue.is_empty():
 		end_combat()
 		return
-
-	if current_turn_index >= turn_queue.size():
-		current_turn_index = 0
-
-	var entity: Entity = turn_queue[current_turn_index]
-
-	process_status_end(entity)
-	_log_new_party_deaths()
-
-	current_turn_index += 1
 	
-	if current_turn_index >= turn_queue.size():
-		current_turn_index = 0
-		
+	if current_turn_entity != null:
+		process_status_end(current_turn_entity)
+	
+	_log_new_party_deaths()
+	current_turn_entity = null
 	next_turn()
 
 func process_status_end(entity: Entity):
@@ -387,6 +428,7 @@ func cleanup_dead():
 				enemy_visuals.erase(e)
 			enemies.erase(e)
 			turn_queue.erase(e)
+			atb_gauge.erase(e)
 			await ui.remove_enemy(e)
 			removed_any = true
 	
@@ -413,13 +455,17 @@ func end_combat():
 
 	if all_players_dead:
 		ui.log("[color=red]Defeat...[/color]")
-	else:
-		ui.log("[color=green]Victory![/color]")
-		var rewards := GameManager.grant_battle_rewards(defeated_enemies)
-		ui.log("[color=yellow]Rewards: +%d XP, +%d Gold[/color]" % [rewards["xp"], rewards["gold"]])
+		await get_tree().create_timer(2.0).timeout
+		SceneTransition.fade_transition_to_scene("res://ui/game_over.tscn")
+		return
+	
+	ui.log("[color=green]Victory![/color]")
+	var rewards := GameManager.grant_battle_rewards(defeated_enemies)
+	ui.log("[color=yellow]Rewards: +%d XP, +%d Gold[/color]" % [rewards["xp"], rewards["gold"]])
 
 	await get_tree().create_timer(2).timeout
-	
+	if battle_is_boss:
+		SceneTransition.fade_transition_to_scene("res://scenes/world/victory_screen.tscn")
 	get_tree().change_scene_to_file("res://scenes/world/overworld.tscn")
 
 func _on_back_pressed():

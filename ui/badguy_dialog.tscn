@@ -1,15 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://bo0o2l71r3kpt"]
+[gd_scene load_steps=2 format=3 uid="uid://bssubhxpt4ne1"]
 
-[ext_resource type="Script" uid="uid://8rt2d3cqy0tl" path="res://ui/dialog.gd" id="1_nqqr4"]
+[ext_resource type="Script" uid="uid://dm6mod7bk1k4x" path="res://ui/badguy_dialog.gd" id="1_a5oa7"]
 
-[node name="Dialog" type="Control"]
+[node name="BaduyDialog" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_nqqr4")
+script = ExtResource("1_a5oa7")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
