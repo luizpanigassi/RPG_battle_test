@@ -465,7 +465,7 @@ func end_combat():
 
 	await get_tree().create_timer(2).timeout
 	if battle_is_boss:
-		SceneTransition.fade_transition_to_scene("res://scenes/world/victory_screen.tscn")
+		SceneTransition.fade_transition_to_scene("res://ui/victory_screen.tscn")
 	get_tree().change_scene_to_file("res://scenes/world/overworld.tscn")
 
 func _on_back_pressed():
