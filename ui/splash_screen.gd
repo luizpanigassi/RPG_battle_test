@@ -18,10 +18,10 @@ func _on_start_button_pressed() -> void:
 	SceneTransition.transition_to_scene("res://scenes/world/overworld.tscn")
 
 func _on_load_button_pressed() -> void:
-	SceneTransition.transition_to_scene("res://ui/load_screen.tscn")
+	SceneTransition.fade_transition_to_scene("res://ui/load_screen.tscn")
 
 func _on_options_button_pressed() -> void:
-	print("implementar o menu de opções")
+	SceneTransition.fade_transition_to_scene("res://ui/options.tscn")
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()

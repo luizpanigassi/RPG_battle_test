@@ -6,7 +6,7 @@
 script = ExtResource("2_y2qiu")
 display_name = "Kobold"
 max_hp = 70
-attack = 12
+attack = 11
 defense = 4
 speed = 16
 animation_prefix = "kobold"

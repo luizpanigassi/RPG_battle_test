@@ -6,9 +6,9 @@
 script = ExtResource("2_jp1h3")
 display_name = "Slime"
 max_hp = 60
-attack = 1
+attack = 3
 defense = 3
-speed = 1
+speed = 8
 animation_prefix = "slime"
 visual_offset = Vector2(0, -80)
 visual_scale = 3.0
