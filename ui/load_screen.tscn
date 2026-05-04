@@ -24,11 +24,11 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-text = "THIS IS JUST A LOAD SCENE, NOTHING TO SEE HERE!"
+text = "THIS IS JUST A LOAD GAME SCREEN, NOTHING TO SEE HERE!"
 
 [node name="LoadGameButton1" type="Button" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-text = "THIS IS A TEST BUTTON"
+text = "DO YOU REALLY NEED TO SAVE/LOAD?"
 
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 0

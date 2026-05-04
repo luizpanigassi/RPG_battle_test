@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://lfrl320mmnow"]
+
+[ext_resource type="Texture2D" uid="uid://c88iwyorhxyrc" path="res://assets/sprites/sword.png" id="1_7o20s"]
+
+[node name="HolyMcguffin" type="Area2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_7o20s")

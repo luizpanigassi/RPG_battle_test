@@ -24,13 +24,14 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-text = "THIS IS JUST AN OPTIONS MENU, NOTHING TO SEE HERE!"
+text = "THIS IS JUST AN OPTIONS MENU"
 
 [node name="LoadGameButton1" type="Button" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-text = "THIS IS A TEST BUTTON"
+text = "THIS BUTTON GRANTS WISHES"
 
 [node name="BackButton" type="Button" parent="."]
+layout_mode = 0
 offset_left = 1049.0
 offset_top = 582.0
 offset_right = 1099.0
