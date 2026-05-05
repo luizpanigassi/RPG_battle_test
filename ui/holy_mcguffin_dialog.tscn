@@ -1,15 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://bo0o2l71r3kpt"]
+[gd_scene load_steps=2 format=3 uid="uid://bnrjd3kbyiusk"]
 
-[ext_resource type="Script" uid="uid://8rt2d3cqy0tl" path="res://ui/dialog.gd" id="1_nqqr4"]
+[ext_resource type="Script" uid="uid://4ku64p56qs2y" path="res://ui/holy_mcguffin_dialog.gd" id="1_yj5x4"]
 
-[node name="Dialog" type="Control"]
+[node name="HolyMcguffinDialog" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_nqqr4")
+script = ExtResource("1_yj5x4")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -23,6 +23,11 @@ grow_vertical = 2
 custom_minimum_size = Vector2(640, 240)
 layout_mode = 2
 
+[node name="ColorRect" type="ColorRect" parent="CenterContainer/PanelContainer"]
+z_index = -6
+layout_mode = 2
+color = Color(0.0142752, 0.0142752, 0.0142752, 1)
+
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
@@ -30,7 +35,6 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.41346, 0.0105787, 0.00586955, 1)
 
 [node name="DialogLabel" type="RichTextLabel" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -46,8 +50,3 @@ layout_mode = 2
 
 [node name="ButtonNo" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-
-[node name="ColorRect" type="ColorRect" parent="CenterContainer/PanelContainer"]
-z_index = -8
-layout_mode = 2
-color = Color(0.0687983, 0.0687983, 0.0687983, 1)

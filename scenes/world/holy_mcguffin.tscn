@@ -1,8 +1,26 @@
-[gd_scene load_steps=2 format=3 uid="uid://lfrl320mmnow"]
+[gd_scene load_steps=4 format=3 uid="uid://lfrl320mmnow"]
 
 [ext_resource type="Texture2D" uid="uid://c88iwyorhxyrc" path="res://assets/sprites/sword.png" id="1_7o20s"]
+[ext_resource type="Script" uid="uid://h3fb1cjhhxpt" path="res://scripts/world/holy_mcguffin.gd" id="1_xm7s0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xm7s0"]
+size = Vector2(33, 36)
 
 [node name="HolyMcguffin" type="Area2D"]
+script = ExtResource("1_xm7s0")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_7o20s")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_left = -59.0
+offset_top = -39.0
+offset_right = 80.0
+offset_bottom = -16.0
+theme_override_font_sizes/font_size = 10
+text = "THE HOLY MCGUFFIN"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, -2)
+shape = SubResource("RectangleShape2D_xm7s0")

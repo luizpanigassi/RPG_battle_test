@@ -30,7 +30,7 @@ offset_top = 612.0
 offset_right = 1125.0
 offset_bottom = 635.0
 theme_override_constants/line_spacing = 10
-text = "A TEST GAME BY A TESTING GUY"
+text = "A GAME MADE BY A GENIUS"
 
 [node name="ButtonsContainer" type="VBoxContainer" parent="."]
 layout_mode = 2

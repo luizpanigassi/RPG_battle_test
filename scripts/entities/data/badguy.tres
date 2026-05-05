@@ -5,10 +5,10 @@
 [resource]
 script = ExtResource("1_opwvh")
 display_name = "Tim, the Sorcerer"
-max_hp = 1
-attack = 1
-defense = 5
-speed = 1
+max_hp = 100000000
+attack = 1000000
+defense = 100000
+speed = 1000
 animation_prefix = "badguy"
 visual_offset = Vector2(0, -140)
 visual_scale = 2.3

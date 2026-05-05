@@ -11,6 +11,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ymcv4")
 
+[node name="WishLabel" type="Label" parent="."]
+layout_mode = 2
+offset_left = 494.0
+offset_top = 406.0
+offset_right = 645.0
+offset_bottom = 429.0
+theme_override_colors/font_color = Color(0.707326, 0.0340743, 0.0189069, 1)
+text = "WISH GRANTED!!!!!!!"
+
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -26,7 +35,7 @@ layout_mode = 2
 layout_mode = 2
 text = "THIS IS JUST AN OPTIONS MENU"
 
-[node name="LoadGameButton1" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="WishButton" type="Button" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
 text = "THIS BUTTON GRANTS WISHES"
 

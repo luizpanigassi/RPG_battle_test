@@ -33,7 +33,14 @@ func create_enemy_by_id(enemy_id: String) -> Enemy:
 	var factory = enemy_factories.get(enemy_id, null)
 	if factory == null:
 		return null
-	return factory.call()
+	var inst: Enemy = factory.call()
+	if enemy_id == "badguy" and has_holy_mcguffin:
+		inst.max_hp = 1
+		inst.hp = 1
+		inst.speed = 1
+		inst.defense = 1
+		
+	return inst
 
 func get_active_player_ids() -> Array[String]:
 	if active_player_ids.is_empty():
@@ -113,3 +120,4 @@ func reset_run() -> void:
 	saved_player_position = Vector2.ZERO
 	has_saved_player_position = false
 	active_player_ids = ["shadow"]
+	has_holy_mcguffin = false

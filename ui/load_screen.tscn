@@ -37,3 +37,15 @@ offset_top = 582.0
 offset_right = 1099.0
 offset_bottom = 613.0
 text = "BACK"
+
+[node name="LOLLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 448.0
+offset_top = 406.0
+offset_right = 723.0
+offset_bottom = 481.0
+theme_override_colors/font_color = Color(0.324311, 0.00614429, 0.00340787, 1)
+text = "OH, DAMN, SOMETHING HAPPENED
+
+Kidding, nothing happened. LOL."
+horizontal_alignment = 1
