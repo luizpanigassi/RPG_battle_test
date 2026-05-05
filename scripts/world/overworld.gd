@@ -8,10 +8,6 @@ extends Node2D
 
 var dialog_scene = preload("res://ui/dialog.tscn")
 var dialog_instance: DialogScreen = null
-var boss_dialog_scene = preload("res://ui/badguy_dialog.tscn")
-var boss_dialog_instance: BadguyDialog = null
-var holy_dialog_scene = preload("res://ui/holy_mcguffin_dialog.tscn")
-var holy_dialog_instance: HolyMcguffinDialog = null
 var pending_mirana_info: bool = false
 
 func _ready() -> void:
@@ -63,6 +59,8 @@ func _on_dialog_closed() -> void:
 		return
 
 func _open_mirana_info_dialog() -> void:
+	player_world.set_physics_process(false)
+	
 	if dialog_instance != null and is_instance_valid(dialog_instance):
 		return
 	
@@ -93,25 +91,25 @@ func _on_mirana_info_closed() -> void:
 
 
 func _on_boss_dialogue_requested() -> void:
-	if boss_dialog_instance != null and is_instance_valid(boss_dialog_instance):
+	if dialog_instance != null and is_instance_valid(dialog_instance):
 		return
 
-	boss_dialog_instance = boss_dialog_scene.instantiate()
-	ui_layer.add_child(boss_dialog_instance)
+	dialog_instance = dialog_scene.instantiate()
+	ui_layer.add_child(dialog_instance)
 
-	boss_dialog_instance.boss_accepted.connect(_on_boss_dialogue_accepted)
-	boss_dialog_instance.boss_declined.connect(_on_boss_dialogue_declined)
-	boss_dialog_instance.boss_closed.connect(_on_boss_dialog_closed)
+	dialog_instance.accepted.connect(_on_boss_dialogue_accepted)
+	dialog_instance.declined.connect(_on_boss_dialogue_declined)
+	dialog_instance.closed.connect(_on_boss_dialog_closed)
 
 	player_world.velocity = Vector2.ZERO
 	player_world.set_physics_process(false)
 
-	boss_dialog_instance.boss_dialog_open(
+	dialog_instance.open_dialogue(
 		"Tim, the Badguy",
 		"I am the evil necromancer! There are some who call me... Tim. Do you wish to face me in battle?",
 		"I fear no evil! Fight me!",
 		"I fear all evil, and I will run like the chicken I am"
-		)
+	)
 
 func _on_boss_dialogue_accepted() -> void:
 	GameManager.set_pending_encounter(["badguy"])
@@ -122,27 +120,27 @@ func _on_boss_dialogue_declined() -> void:
 	badguy_world.close_dialogue()
 
 func _on_boss_dialog_closed() -> void:
-	if boss_dialog_instance != null and is_instance_valid(boss_dialog_instance):
-		boss_dialog_instance.queue_free()
+	if dialog_instance != null and is_instance_valid(dialog_instance):
+		dialog_instance.queue_free()
 	player_world.set_physics_process(true)
-	boss_dialog_instance = null
+	dialog_instance = null
 	badguy_world.close_dialogue()
 
 func _on_pickup_requested() -> void:
-	if holy_dialog_instance != null and is_instance_valid(holy_dialog_instance):
+	if dialog_instance != null and is_instance_valid(dialog_instance):
 		return
-	
-	holy_dialog_instance = holy_dialog_scene.instantiate()
-	ui_layer.add_child(holy_dialog_instance)
 
-	holy_dialog_instance.holy_accepted.connect(_on_holy_accepted)
-	holy_dialog_instance.holy_declined.connect(_on_holy_declined)
-	holy_dialog_instance.holy_closed.connect(_on_holy_closed)
+	dialog_instance = dialog_scene.instantiate()
+	ui_layer.add_child(dialog_instance)
+
+	dialog_instance.accepted.connect(_on_holy_accepted)
+	dialog_instance.declined.connect(_on_holy_declined)
+	dialog_instance.closed.connect(_on_holy_closed)
 
 	player_world.velocity = Vector2.ZERO
 	player_world.set_physics_process(false)
 
-	holy_dialog_instance.open_holy_dialogue(
+	dialog_instance.open_dialogue(
 		"The Holy McGuffin!",
 		"Brave hero, I have the power you need to fight the evil lord. Will you wield me in battle?",
 		"Take the Holy McGuffin",
@@ -160,8 +158,8 @@ func _on_holy_declined() -> void:
 	holy_mcguffin.close_holy_dialogue()
 
 func _on_holy_closed() -> void:
-	if holy_dialog_instance != null and is_instance_valid(holy_dialog_instance):
-		holy_dialog_instance.queue_free()
+	if dialog_instance != null and is_instance_valid(dialog_instance):
+		dialog_instance.queue_free()
 	player_world.set_physics_process(true)
-	holy_dialog_instance = null
+	dialog_instance = null
 	holy_mcguffin.close_holy_dialogue()
