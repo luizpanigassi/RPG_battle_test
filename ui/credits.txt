@@ -1,0 +1,107 @@
+[center][b]Heroes of Clichè[/b]
+
+A game about courage, heroes, and the mightiest weapon of all.
+
+[b]Development team[/b]
+
+[b]Lead Designer[/b]
+Luiz Panigassi
+
+[b]Senior programmer[/b]
+Luiz Panigassi (dude, I'm 42, wtf?)
+
+[b]Art[/b]
+Several itch.io artists
+
+[b]Music[/b]
+Luiz Panigassi
+
+[b]Story[/b]
+Nathalia Buchholz
+
+[b]Voice Actors[/b]
+Ozzy & Bowie barking at people in the hallway
+Harumaki begging for food
+Traffic
+
+[b]QA testing[/b]
+Luiz Panigassi
+Marcella Aricia
+Harumaki (walking on the keyboard)
+
+[b]Lead bug fixer[/b]
+Harumaki
+
+[b]Junior bug fixer[/b]
+Ozzy
+
+[b]Additional programming[/b]
+Chamomile tea
+ChatGPT
+That one guy from that one video on YouTube
+
+[b]Historical consultancy[/b]
+None
+
+[b]Kobold consultant[/b]
+They don't exist
+
+[b]Localization[/b]
+Google Translator
+A mexican guy I found
+That one german dude
+
+[b]Emotional Support[/b]
+Harumaki
+Bowie
+Ozzy
+
+[b]Emotional damage (slaps slipper on the table)[/b]
+Godot terminal errors
+
+[b]Unconditional love[/b]
+Marcella Aricia
+
+[b]Security[/b]
+Bowie
+
+[b]Snacks[/b]
+Luiz Panigassi
+
+[b]Investors[/b]
+No one
+
+[b]Special thanks[/b]
+Everyone who said "where's the multiplayer" and left
+await get_tree().process_frame
+
+[b]A game by Anachronic Studios[/b]
+
+No animals were harmed during development
+
+Ozzy felt midly offended once when I delayed walkies
+Harumaki was hungry for an extra 10 minutes when I had to fix a bug
+[font_size=50]
+
+[/font_size]
+We're not done.
+[font_size=64]
+
+[/font_size]
+"Life moves pretty fast. If you don't stop and look around once in a while, you could miss it."
+- Ferris Bueller
+[font_size=64]
+
+[/font_size]
+This ain't a Marvel movie. No post credit scene.
+[font_size=64]
+
+[/font_size]
+Achievment Unlocked: True Ending
+
+
+LOL, can you imagine? One day I'll add trophies.
+
+
+Thanks for playing. Seriously. That was a lot of work.
+[/center]

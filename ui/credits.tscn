@@ -1,0 +1,71 @@
+[gd_scene load_steps=2 format=3 uid="uid://qbq8trdu8wsw"]
+
+[ext_resource type="Script" uid="uid://bk3s41l4y42rf" path="res://ui/credits.gd" id="1_ed0b0"]
+
+[node name="Credits" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ed0b0")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TopSpacer" type="Control" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CreditsText" type="RichTextLabel" parent="ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(1152, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="BottomSpacer" type="Control" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SkipButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 921.0
+offset_top = 599.0
+offset_right = 1124.0
+offset_bottom = 630.0
+text = "Skip (you wouldn't, right?)"
+
+[node name="RewardButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 522.0
+offset_top = 282.0
+offset_right = 624.0
+offset_bottom = 313.0
+text = "New Game+"
+
+[node name="RewardMessage" type="Label" parent="."]
+layout_mode = 0
+offset_left = 558.0
+offset_top = 323.0
+offset_right = 598.0
+offset_bottom = 346.0
