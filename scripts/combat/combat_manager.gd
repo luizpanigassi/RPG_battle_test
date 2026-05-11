@@ -28,7 +28,7 @@ const NORMAL_BATTLE_TRACK := preload("res://assets/music/Dawn_of_the_Last_Stand.
 const BOSS_BATTLE_TRACK := preload("res://assets/music/Throne_of_Obsidian.mp3")
 const MUSIC_START_DB := -35.0
 const MUSIC_TARGET_DB := -5.0
-const MUSIC_FADE_IN_TIME := 3.0
+const MUSIC_FADE_IN_TIME := 0.5
 
 const CROSSFADE_TIME := 1.0
 

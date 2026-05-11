@@ -11,6 +11,11 @@ var pickup_open := false
 var collected := false
 
 func _ready() -> void:
+	collected = GameManager.has_holy_mcguffin
+	if collected:
+		collect()
+		return
+
 	holy_label.hide()
 	body_entered.connect(_on_holy_entered)
 	body_exited.connect(_on_holy_exited)

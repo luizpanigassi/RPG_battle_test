@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var encounter_rate := 0.02
+@export var encounter_rate := 0.015
 @export var activation_cooldown := 1.0
 @export var max_enemies := 3
 @export var min_enemies := 1

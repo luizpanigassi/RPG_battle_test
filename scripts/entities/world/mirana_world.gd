@@ -11,6 +11,11 @@ var dialogue_open := false
 var recruited := false
 
 func _ready() -> void:
+	recruited = GameManager.has_party_member("mirana")
+	if recruited:
+		recruit()
+		return
+
 	prompt_label.hide()
 	sprite.play("mirana_idle")
 	body_entered.connect(_on_body_entered)
@@ -54,4 +59,5 @@ func recruit() -> void:
 	recruited = true
 	player_in_range = false
 	prompt_label.hide()
+	hide()
 	monitoring = false
