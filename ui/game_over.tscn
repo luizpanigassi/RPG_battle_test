@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dw58km1byr8fn"]
+[gd_scene load_steps=3 format=3 uid="uid://dw58km1byr8fn"]
 
 [ext_resource type="Script" uid="uid://bfmg1sc7obs6l" path="res://ui/game_over.gd" id="1_oo8kp"]
+[ext_resource type="AudioStream" uid="uid://bea60227hr8t3" path="res://assets/music/The_Sunken_Crown.mp3" id="2_5eixk"]
 
 [node name="GameOver" type="Control"]
 layout_mode = 3
@@ -32,3 +33,15 @@ text = "Your heroes have been defeated. The world now will descend into chaos...
 
 But you can always try again..."
 horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1016.0
+offset_top = 591.0
+offset_right = 1115.0
+offset_bottom = 622.0
+text = "TRY AGAIN?"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_5eixk")
+autoplay = true

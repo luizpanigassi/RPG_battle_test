@@ -29,10 +29,8 @@ const BOSS_BATTLE_TRACK := preload("res://assets/music/Throne_of_Obsidian.mp3")
 const MUSIC_START_DB := -35.0
 const MUSIC_TARGET_DB := -5.0
 const MUSIC_FADE_IN_TIME := 3.0
-const MUSIC_RESTART_DELAY := 0.1
 
 const CROSSFADE_TIME := 1.0
-const GAP_BEFORE_RESTART := 0.05
 
 var _active_music_player: AudioStreamPlayer = null
 var _inactive_music_player: AudioStreamPlayer = null
@@ -47,8 +45,6 @@ func _ready():
 	ui.target_selected.connect(_on_target_selected)
 	ui.all_enemies_confirmed.connect(_on_all_enemies_confirmed)
 	ui.back_pressed.connect(_on_back_pressed)
-	if battle_music_a != null and not battle_music_a.finished.is_connected(_on_battle_music_finished):
-		battle_music_a.finished.connect(_on_battle_music_finished)
 	
 	start_combat()
 	_start_battle_music_crossfade()
@@ -588,25 +584,9 @@ func _prime_dead_player_log() -> void:
 		if not member_id.is_empty():
 			dead_player_log[member_id] = true
 
-func _start_battle_music() -> void:
-	if battle_music_a == null or battle_music_b == null:
-		return
-
-	battle_music_a.stop()
-	battle_music_a.volume_db = MUSIC_START_DB
-	battle_music_a.stream = BOSS_BATTLE_TRACK if battle_is_boss else NORMAL_BATTLE_TRACK
-	battle_music_a.play()
-
-	var tween := create_tween()
-	tween.tween_property(battle_music_a, "volume_db", MUSIC_TARGET_DB, MUSIC_FADE_IN_TIME)
-
-func _on_battle_music_finished() -> void:
-	await get_tree().create_timer(MUSIC_RESTART_DELAY).timeout
-	_start_battle_music()
-
 func _start_battle_music_crossfade() -> void:
 	if battle_music_a == null or battle_music_b == null:
-		_start_battle_music()
+		push_warning("Battle music players are missing from battle_scene.tscn")
 		return
 
 	_active_music_player = battle_music_a
@@ -633,7 +613,6 @@ func _play_music_on_active() -> void:
 
 func _on_crossfade_music_finished() -> void:
 	if _inactive_music_player == null or _active_music_player == null:
-		await get_tree().create_timer(GAP_BEFORE_RESTART).timeout
 		_play_music_on_active()
 		return
 
@@ -642,10 +621,11 @@ func _on_crossfade_music_finished() -> void:
 	_inactive_music_player.stream = track
 	_inactive_music_player.volume_db = MUSIC_START_DB
 	_inactive_music_player.play()
+	_active_music_player.volume_db = MUSIC_START_DB
 
 	var t := create_tween()
 	t.tween_property(_inactive_music_player, "volume_db", MUSIC_TARGET_DB, CROSSFADE_TIME)
-	t.tween_property(_active_music_player, "volume_db", MUSIC_TARGET_DB, CROSSFADE_TIME)
+	t.tween_property(_active_music_player, "volume_db", MUSIC_START_DB, CROSSFADE_TIME)
 	await t.finished
 
 	_active_music_player.stop()

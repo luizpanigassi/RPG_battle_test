@@ -1,6 +1,43 @@
-[gd_scene load_steps=2 format=3 uid="uid://o81u6ok3yh88"]
+[gd_scene load_steps=6 format=3 uid="uid://o81u6ok3yh88"]
 
 [ext_resource type="Script" uid="uid://cp1y3bitta8vi" path="res://ui/victory_screen.gd" id="1_oh8u7"]
+[ext_resource type="AudioStream" uid="uid://cwuo04ahv62vs" path="res://assets/music/Banner_at_the_Gates.mp3" id="2_05ipg"]
+
+[sub_resource type="Animation" id="Animation_05ipg"]
+resource_name = "fade_in_music"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AudioStreamPlayer:volume_db")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-60.0, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_i2vuy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AudioStreamPlayer:volume_db")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-60.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_csba1"]
+_data = {
+&"RESET": SubResource("Animation_i2vuy"),
+&"fade_in_music": SubResource("Animation_05ipg")
+}
 
 [node name="VictoryScreen" type="Control"]
 layout_mode = 3
@@ -32,3 +69,22 @@ text = "The evil necromancer Tim Badguy was defeated! The world rejoices, birds 
 people are dancing and singing, drinking mead or whatever they want,
 enjoying this new found peace!"
 horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 944.0
+offset_top = 577.0
+offset_right = 1112.0
+offset_bottom = 608.0
+text = "WATCH THE CREDITS"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_05ipg")
+volume_db = -60.0
+autoplay = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_csba1")
+}
+autoplay = "fade_in_music"
