@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://qbq8trdu8wsw"]
+[gd_scene load_steps=3 format=3 uid="uid://qbq8trdu8wsw"]
 
 [ext_resource type="Script" uid="uid://bk3s41l4y42rf" path="res://ui/credits.gd" id="1_ed0b0"]
+[ext_resource type="AudioStream" uid="uid://hoe2csnygeam" path="res://assets/music/Banner_Over_the_Highland.mp3" id="2_orljq"]
 
 [node name="Credits" type="Control"]
 layout_mode = 3
@@ -55,17 +56,26 @@ offset_right = 1124.0
 offset_bottom = 630.0
 text = "Skip (you wouldn't, right?)"
 
-[node name="RewardButton" type="Button" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 522.0
-offset_top = 282.0
-offset_right = 624.0
-offset_bottom = 313.0
+offset_left = 321.0
+offset_top = 259.0
+offset_right = 821.0
+offset_bottom = 794.0
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="RewardButton" type="Button" parent="VBoxContainer/CenterContainer"]
+layout_mode = 2
 text = "New Game+"
 
-[node name="RewardMessage" type="Label" parent="."]
-layout_mode = 0
-offset_left = 558.0
-offset_top = 323.0
-offset_right = 598.0
-offset_bottom = 346.0
+[node name="RewardMessage" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_orljq")
+autoplay = true

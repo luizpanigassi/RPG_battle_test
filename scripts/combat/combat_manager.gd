@@ -4,6 +4,8 @@ extends Node
 @onready var canvas_layer: CanvasLayer = $"../CanvasLayer"
 @onready var ui = $"../CanvasLayer/BattleUi"
 @onready var enemy_container = $"../CanvasLayer/EnemyContainer"
+@onready var battle_music_a: AudioStreamPlayer = $"../BattleMusicA"
+@onready var battle_music_b: AudioStreamPlayer = $"../BattleMusicB"
 
 var player_anchor: Node2D = null
 var waiting_for_input = false
@@ -22,6 +24,18 @@ var atb_gauge: Dictionary = {}
 var current_turn_entity: Entity = null
 
 const ATB_THRESHOLD := 100.0
+const NORMAL_BATTLE_TRACK := preload("res://assets/music/Dawn_of_the_Last_Stand.mp3")
+const BOSS_BATTLE_TRACK := preload("res://assets/music/Throne_of_Obsidian.mp3")
+const MUSIC_START_DB := -35.0
+const MUSIC_TARGET_DB := -5.0
+const MUSIC_FADE_IN_TIME := 3.0
+const MUSIC_RESTART_DELAY := 0.1
+
+const CROSSFADE_TIME := 1.0
+const GAP_BEFORE_RESTART := 0.05
+
+var _active_music_player: AudioStreamPlayer = null
+var _inactive_music_player: AudioStreamPlayer = null
 
 func _ready():
 	await get_tree().process_frame
@@ -33,8 +47,11 @@ func _ready():
 	ui.target_selected.connect(_on_target_selected)
 	ui.all_enemies_confirmed.connect(_on_all_enemies_confirmed)
 	ui.back_pressed.connect(_on_back_pressed)
+	if battle_music_a != null and not battle_music_a.finished.is_connected(_on_battle_music_finished):
+		battle_music_a.finished.connect(_on_battle_music_finished)
 	
 	start_combat()
+	_start_battle_music_crossfade()
 
 func start_combat():
 	_spawn_player_party()
@@ -466,6 +483,7 @@ func end_combat():
 	await get_tree().create_timer(2).timeout
 	if battle_is_boss:
 		SceneTransition.fade_transition_to_scene("res://ui/victory_screen.tscn")
+		return
 	get_tree().change_scene_to_file("res://scenes/world/overworld.tscn")
 
 func _on_back_pressed():
@@ -569,3 +587,71 @@ func _prime_dead_player_log() -> void:
 
 		if not member_id.is_empty():
 			dead_player_log[member_id] = true
+
+func _start_battle_music() -> void:
+	if battle_music_a == null or battle_music_b == null:
+		return
+
+	battle_music_a.stop()
+	battle_music_a.volume_db = MUSIC_START_DB
+	battle_music_a.stream = BOSS_BATTLE_TRACK if battle_is_boss else NORMAL_BATTLE_TRACK
+	battle_music_a.play()
+
+	var tween := create_tween()
+	tween.tween_property(battle_music_a, "volume_db", MUSIC_TARGET_DB, MUSIC_FADE_IN_TIME)
+
+func _on_battle_music_finished() -> void:
+	await get_tree().create_timer(MUSIC_RESTART_DELAY).timeout
+	_start_battle_music()
+
+func _start_battle_music_crossfade() -> void:
+	if battle_music_a == null or battle_music_b == null:
+		_start_battle_music()
+		return
+
+	_active_music_player = battle_music_a
+	_inactive_music_player = battle_music_b
+
+	_play_music_on_active()
+
+func _play_music_on_active() -> void:
+	if _active_music_player == null:
+		return
+
+	var track = BOSS_BATTLE_TRACK if battle_is_boss else NORMAL_BATTLE_TRACK
+
+	_active_music_player.stop()
+	_active_music_player.stream = track
+	_active_music_player.volume_db = MUSIC_START_DB
+	_active_music_player.play()
+
+	if not _active_music_player.finished.is_connected(_on_crossfade_music_finished):
+		_active_music_player.finished.connect(_on_crossfade_music_finished)
+
+	var tween := create_tween()
+	tween.tween_property(_active_music_player, "volume_db", MUSIC_TARGET_DB, MUSIC_FADE_IN_TIME)
+
+func _on_crossfade_music_finished() -> void:
+	if _inactive_music_player == null or _active_music_player == null:
+		await get_tree().create_timer(GAP_BEFORE_RESTART).timeout
+		_play_music_on_active()
+		return
+
+	var track = BOSS_BATTLE_TRACK if battle_is_boss else NORMAL_BATTLE_TRACK
+	_inactive_music_player.stop()
+	_inactive_music_player.stream = track
+	_inactive_music_player.volume_db = MUSIC_START_DB
+	_inactive_music_player.play()
+
+	var t := create_tween()
+	t.tween_property(_inactive_music_player, "volume_db", MUSIC_TARGET_DB, CROSSFADE_TIME)
+	t.tween_property(_active_music_player, "volume_db", MUSIC_TARGET_DB, CROSSFADE_TIME)
+	await t.finished
+
+	_active_music_player.stop()
+	var tmp := _active_music_player
+	_active_music_player = _inactive_music_player
+	_inactive_music_player = tmp
+
+	if not _active_music_player.finished.is_connected(_on_crossfade_music_finished):
+		_active_music_player.finished.connect(_on_crossfade_music_finished)

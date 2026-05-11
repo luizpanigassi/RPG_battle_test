@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://vea1wigl82pq"]
+[gd_scene load_steps=4 format=3 uid="uid://vea1wigl82pq"]
 
 [ext_resource type="Script" uid="uid://bw76j1rset66w" path="res://ui/splash_screen.gd" id="1_akcm2"]
 [ext_resource type="Texture2D" uid="uid://busxjtqxohwye" path="res://assets/ui/splash.png" id="2_3c7gn"]
+[ext_resource type="AudioStream" uid="uid://cywm8ah0meleb" path="res://assets/music/Dawn_of_the_Last_Knight.mp3" id="3_j1ho6"]
 
 [node name="SplashScreen" type="Control"]
 layout_mode = 3
@@ -72,3 +73,7 @@ theme_override_constants/shadow_offset_y = 6
 theme_override_constants/shadow_outline_size = 15
 theme_override_font_sizes/font_size = 82
 text = "HEROES OF CLICHÈ"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_j1ho6")
+autoplay = true

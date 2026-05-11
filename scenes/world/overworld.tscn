@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cqstjila1sqdy"]
+[gd_scene load_steps=19 format=3 uid="uid://cqstjila1sqdy"]
 
 [ext_resource type="Texture2D" uid="uid://cjdb01sabi0lv" path="res://assets/tilemaps/tileset_grass.png" id="1_373mm"]
 [ext_resource type="Script" uid="uid://cm0vh4ckvga2n" path="res://scripts/world/overworld.gd" id="1_h0wcu"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bjwtar01v3c5u" path="res://scenes/world/badguy_world.tscn" id="6_espw7"]
 [ext_resource type="PackedScene" uid="uid://lfrl320mmnow" path="res://scenes/world/holy_mcguffin.tscn" id="7_o3ojk"]
 [ext_resource type="PackedScene" uid="uid://tsu71myxcify" path="res://scenes/world/tree.tscn" id="8_2nq1m"]
+[ext_resource type="AudioStream" uid="uid://wfnq7a5pd1mw" path="res://assets/music/Sunset_at_the_Capital_Gates.mp3" id="10_ap4hg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fxtkv"]
 texture = ExtResource("1_373mm")
@@ -1479,3 +1480,8 @@ position = Vector2(1340, 334)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WorldBounds/RightWall"]
 position = Vector2(-162, -10)
 shape = SubResource("RectangleShape2D_xwc2a")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_ap4hg")
+autoplay = true
+parameters/looping = true

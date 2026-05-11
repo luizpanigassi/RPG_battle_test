@@ -5,6 +5,7 @@ extends Node2D
 @onready var badguy_world: BadguyWorld = $BadguyWorld
 @onready var holy_mcguffin: HolyMcguffin = $HolyMcguffin
 @onready var ui_layer: CanvasLayer = $UILayer
+@onready var music: AudioStreamPlayer = $AudioStreamPlayer
 
 var dialog_scene = preload("res://ui/dialog.tscn")
 var dialog_instance: DialogScreen = null
@@ -14,6 +15,15 @@ func _ready() -> void:
 	mirana_world.dialogue_requested.connect(_on_mirana_dialogue_requested)
 	badguy_world.boss_dialogue_requested.connect(_on_boss_dialogue_requested)
 	holy_mcguffin.pickup_requested.connect(_on_pickup_requested)
+	
+	music.volume_db = -35.0
+	music.play()
+	
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_OUT)
+	
+	tween.tween_property(music, "volume_db", -5.0, 3.0)
 
 
 func _on_mirana_dialogue_requested() -> void:
@@ -113,6 +123,10 @@ func _on_boss_dialogue_requested() -> void:
 
 func _on_boss_dialogue_accepted() -> void:
 	GameManager.set_pending_encounter(["badguy"])
+	var tween = create_tween()
+	tween.tween_property(music, "volume_db", -35.0, 1.0)
+	
+	await tween.finished
 	SceneTransition.transition_to_scene("res://scenes/battle/battle_scene.tscn")
 
 func _on_boss_dialogue_declined() -> void:

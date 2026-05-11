@@ -21,3 +21,7 @@ scale = Vector2(2.33332, 2.34643)
 z_index = 1
 
 [node name="BattleUi" parent="CanvasLayer" instance=ExtResource("4_cywj5")]
+
+[node name="BattleMusicA" type="AudioStreamPlayer" parent="."]
+
+[node name="BattleMusicB" type="AudioStreamPlayer" parent="."]
