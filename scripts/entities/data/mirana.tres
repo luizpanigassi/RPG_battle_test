@@ -6,9 +6,9 @@
 script = ExtResource("2_m203l")
 display_name = "Mirana"
 max_hp = 100
-attack = 1500
+attack = 10
 defense = 5
-speed = 15
+speed = 12
 animation_prefix = "mirana"
 visual_offset = Vector2(0, -150)
 visual_scale = 2.0
